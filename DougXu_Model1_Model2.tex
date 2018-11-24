@@ -1,0 +1,1192 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{DougXu\_Model1\_Model2}
+    
+    
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \textbf{Meeting 11/20/2018 Joanna Wang, Douglas Xu}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{library}\PY{p}{(}car\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Loading required package: carData
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} data \PY{o}{\PYZlt{}\PYZhy{}} read.csv\PY{p}{(}file\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{crime\PYZus{}v2.csv\PYZdq{}}\PY{p}{,} header\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,} sep\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{,\PYZdq{}}\PY{p}{,}na.strings\PY{o}{=}\PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{`\PYZdq{}}\PY{p}{,}\PY{l+s}{\PYZdq{}}\PY{l+s}{\PYZdq{}}\PY{p}{,}\PY{l+s}{\PYZdq{}}\PY{l+s}{NA\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}62}]:} \PY{k+kp}{objects}\PY{p}{(}data\PY{p}{)}
+         \PY{k+kp}{length}\PY{p}{(}data\PY{o}{\PYZdl{}}year\PY{p}{)}
+\end{Verbatim}
+
+    \begin{enumerate*}
+\item 'avgsen'
+\item 'central'
+\item 'county'
+\item 'crmrte'
+\item 'density'
+\item 'mix'
+\item 'pctmin80'
+\item 'pctymle'
+\item 'polpc'
+\item 'prbarr'
+\item 'prbconv'
+\item 'prbpris'
+\item 'taxpc'
+\item 'urban'
+\item 'wcon'
+\item 'west'
+\item 'wfed'
+\item 'wfir'
+\item 'wloc'
+\item 'wmfg'
+\item 'wser'
+\item 'wsta'
+\item 'wtrd'
+\item 'wtuc'
+\item 'year'
+\end{enumerate*}
+
+
+    
+    91
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k+kp}{summary}\PY{p}{(}data\PY{p}{)}
+\end{Verbatim}
+
+    
+    \begin{verbatim}
+     county           year        crmrte             prbarr       
+ Min.   :  1.0   Min.   :87   Min.   :0.005533   Min.   :0.09277  
+ 1st Qu.: 52.0   1st Qu.:87   1st Qu.:0.020927   1st Qu.:0.20568  
+ Median :105.0   Median :87   Median :0.029986   Median :0.27095  
+ Mean   :101.6   Mean   :87   Mean   :0.033400   Mean   :0.29492  
+ 3rd Qu.:152.0   3rd Qu.:87   3rd Qu.:0.039642   3rd Qu.:0.34438  
+ Max.   :197.0   Max.   :87   Max.   :0.098966   Max.   :1.09091  
+ NA's   :6       NA's   :6    NA's   :6          NA's   :6        
+    prbconv           prbpris           avgsen           polpc         
+ Min.   :0.06838   Min.   :0.1500   Min.   : 5.380   Min.   :0.000746  
+ 1st Qu.:0.34541   1st Qu.:0.3648   1st Qu.: 7.340   1st Qu.:0.001231  
+ Median :0.45283   Median :0.4234   Median : 9.100   Median :0.001485  
+ Mean   :0.55128   Mean   :0.4108   Mean   : 9.647   Mean   :0.001702  
+ 3rd Qu.:0.58886   3rd Qu.:0.4568   3rd Qu.:11.420   3rd Qu.:0.001877  
+ Max.   :2.12121   Max.   :0.6000   Max.   :20.700   Max.   :0.009054  
+ NA's   :6         NA's   :6        NA's   :6        NA's   :6         
+    density            taxpc             west           central      
+ Min.   :0.00002   Min.   : 25.69   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.54741   1st Qu.: 30.66   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.96226   Median : 34.87   Median :0.0000   Median :0.0000  
+ Mean   :1.42884   Mean   : 38.06   Mean   :0.2527   Mean   :0.3736  
+ 3rd Qu.:1.56824   3rd Qu.: 40.95   3rd Qu.:0.5000   3rd Qu.:1.0000  
+ Max.   :8.82765   Max.   :119.76   Max.   :1.0000   Max.   :1.0000  
+ NA's   :6         NA's   :6        NA's   :6        NA's   :6       
+     urban            pctmin80           wcon            wtuc      
+ Min.   :0.00000   Min.   : 1.284   Min.   :193.6   Min.   :187.6  
+ 1st Qu.:0.00000   1st Qu.: 9.845   1st Qu.:250.8   1st Qu.:374.6  
+ Median :0.00000   Median :24.312   Median :281.4   Median :406.5  
+ Mean   :0.08791   Mean   :25.495   Mean   :285.4   Mean   :411.7  
+ 3rd Qu.:0.00000   3rd Qu.:38.142   3rd Qu.:314.8   3rd Qu.:443.4  
+ Max.   :1.00000   Max.   :64.348   Max.   :436.8   Max.   :613.2  
+ NA's   :6         NA's   :6        NA's   :6       NA's   :6      
+      wtrd            wfir            wser             wmfg      
+ Min.   :154.2   Min.   :170.9   Min.   : 133.0   Min.   :157.4  
+ 1st Qu.:190.9   1st Qu.:286.5   1st Qu.: 229.7   1st Qu.:288.9  
+ Median :203.0   Median :317.3   Median : 253.2   Median :320.2  
+ Mean   :211.6   Mean   :322.1   Mean   : 275.6   Mean   :335.6  
+ 3rd Qu.:225.1   3rd Qu.:345.4   3rd Qu.: 280.5   3rd Qu.:359.6  
+ Max.   :354.7   Max.   :509.5   Max.   :2177.1   Max.   :646.9  
+ NA's   :6       NA's   :6       NA's   :6        NA's   :6      
+      wfed            wsta            wloc            mix         
+ Min.   :326.1   Min.   :258.3   Min.   :239.2   Min.   :0.01961  
+ 1st Qu.:400.2   1st Qu.:329.3   1st Qu.:297.3   1st Qu.:0.08074  
+ Median :449.8   Median :357.7   Median :308.1   Median :0.10186  
+ Mean   :442.9   Mean   :357.5   Mean   :312.7   Mean   :0.12884  
+ 3rd Qu.:478.0   3rd Qu.:382.6   3rd Qu.:329.2   3rd Qu.:0.15175  
+ Max.   :598.0   Max.   :499.6   Max.   :388.1   Max.   :0.46512  
+ NA's   :6       NA's   :6       NA's   :6       NA's   :6        
+    pctymle       
+ Min.   :0.06216  
+ 1st Qu.:0.07443  
+ Median :0.07771  
+ Mean   :0.08396  
+ 3rd Qu.:0.08350  
+ Max.   :0.24871  
+ NA's   :6        
+    \end{verbatim}
+
+    
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  6 NA
+\item
+  take out year column
+\item
+  "prbarr" max \textgreater{} 1
+\item
+  "prbconv" strange characters and blank spaces; also the probability is
+  bigger than 1
+\item
+  taxpc, what is the unit, what does it mean? Outlier at 119. Is the
+  unit \%?
+\item
+  pctmin80 data is too old
+\item
+  15-23: different industry avg. wages
+\item
+  24 mix: ratio of face-to-face crime
+\item
+  percentage young male (what is the age:15-24)
+\end{enumerate}
+
+Plan before Thrusday: 1. research question 2. identify the relevant
+variables
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{k+kp}{tail}\PY{p}{(}data\PY{p}{,}\PY{l+m}{50}\PY{p}{)}
+        hist\PY{p}{(}data\PY{o}{\PYZdl{}}prbconv\PY{p}{)}
+\end{Verbatim}
+
+    \begin{tabular}{r|lllllllllllllllllllllllll}
+  & county & year & crmrte & prbarr & prbconv & prbpris & avgsen & polpc & density & taxpc & ... & wtuc & wtrd & wfir & wser & wmfg & wfed & wsta & wloc & mix & pctymle\\
+\hline
+	48 & 109          & 87           & 0.0230995    & 0.162769     & 0.781609     & 0.411765     &  9.12        & 0.00108043   & 1.5939596890 & 27.32160     & ...          & 374.0296     & 226.4881     & 335.4204     &  230.3086    & 320.20       & 453.61       & 389.34       & 302.93       & 0.05424063   & 0.08050946  \\
+	49 & 111          & 87           & 0.0183048    & 0.202112     & 0.522388     & 0.542857     & 11.06        & 0.00118719   & 0.8306636210 & 29.58239     & ...          & 571.5438     & 179.5039     & 327.9666     &  251.4270    & 260.35       & 384.15       & 354.41       & 304.91       & 0.06763285   & 0.06861899  \\
+	50 & 113          & 87           & 0.0142071    & 0.179878     & 0.220339     & 0.461538     &  6.39        & 0.00151600   & 0.4487427470 & 40.80142     & ...          & 412.0879     & 154.2090     & 256.4102     &  265.1301    & 291.10       & 337.09       & 374.11       & 246.65       & 0.05128205   & 0.09171820  \\
+	51 & 115          & 87           & 0.0055332    & 1.090910     & 1.500000     & 0.500000     & 20.70        & 0.00905433   & 0.3858093020 & 28.19310     & ...          & 503.2351     & 217.4908     & 342.4658     &  245.2061    & 448.42       & 442.20       & 340.39       & 386.12       & 0.10000000   & 0.07253495  \\
+	52 & 117          & 87           & 0.0268723    & 0.370474     & 0.793233     & 0.236967     & 11.83        & 0.00119765   & 0.5813449030 & 38.81493     & ...          & 424.7286     & 167.0511     & 282.4099     &  229.0151    & 327.29       & 383.88       & 360.66       & 302.03       & 0.07485030   & 0.07632116  \\
+	53 & 119          & 87           & 0.0989659    & 0.149094     & 0.347800     & 0.486183     &  7.13        & 0.00223135   & 8.8276519780 & 75.67243     & ...          & 548.3239     & 354.6761     & 509.4655     &  354.3007    & 494.30       & 568.40       & 329.22       & 379.77       & 0.16869897   & 0.07916495  \\
+	54 & 123          & 87           & 0.0300184    & 0.487430     & 0.226361     & 0.443038     &  6.49        & 0.00176086   & 0.4938775600 & 38.45734     & ...          & 396.2704     & 193.0723     & 272.2941     &  242.4605    & 277.34       & 345.09       & 328.00       & 325.77       & 0.31135532   & 0.08119376  \\
+	55 & 125          & 87           & 0.0266287    & 0.269043     & 0.438961     & 0.396450     &  7.36        & 0.00200971   & 0.8202567700 & 48.15414     & ...          & 457.5350     & 199.5847     & 299.7388     &  320.1325    & 277.68       & 447.87       & 361.24       & 300.77       & 0.07110778   & 0.07415335  \\
+	56 & 127          & 87           & 0.0291496    & 0.179616     & 1.358140     & 0.335616     & 15.99        & 0.00158289   & 1.3388888840 & 32.02376     & ...          & 426.3901     & 257.6008     & 441.1413     &  305.7612    & 329.87       & 508.61       & 380.30       & 329.71       & 0.06305506   & 0.07400288  \\
+	57 & 129          & 87           & 0.0834982    & 0.236601     & 0.393413     & 0.415158     &  9.57        & 0.00255849   & 6.2864866260 & 67.67963     & ...          & 392.0999     & 220.4530     & 363.2880     &  292.7027    & 464.49       & 548.49       & 421.36       & 319.08       & 0.07871422   & 0.08109921  \\
+	58 & 131          & 87           & 0.0189848    & 0.689024     & 0.495575     & 0.401786     &  9.97        & 0.00121549   & 0.4126394090 & 37.70006     & ...          & 375.2345     & 220.9747     & 307.6923     &  172.6281    & 278.70       & 432.81       & 370.81       & 259.78       & 0.16725978   & 0.08356434  \\
+	59 & 133          & 87           & 0.0551287    & 0.266960     & 0.271947     & 0.334951     &  8.99        & 0.00154457   & 1.6500655410 & 27.46926     & ...          & 318.9644     & 183.2609     & 265.1232     &  230.6581    & 258.25       & 326.10       & 329.43       & 301.64       & 0.12176319   & 0.24871162  \\
+	60 & 135          & 87           & 0.0628972    & 0.092770     & 0.477733     & 0.385593     & 11.92        & 0.00233871   & 2.1575000290 & 35.99248     & ...          & 420.8830     & 179.1289     & 389.8522     &  292.2253    & 388.75       & 509.95       & 499.59       & 333.05       & 0.05091770   & 0.13302912  \\
+	61 & 137          & 87           & 0.0126662    & 0.207143     & 1.068970     & 0.322581     &  6.18        & 0.00081426   & 0.3167155390 & 44.29367     & ...          & 356.1254     & 170.8711     & 170.9402     &  250.8361    & 192.96       & 360.84       & 283.90       & 321.73       & 0.06870229   & 0.07098370  \\
+	62 & 139          & 87           & 0.0243470    & 0.522696     & 0.289474     & 0.345455     & 14.22        & 0.00167448   & 1.3333333730 & 29.49915     & ...          & 441.5954     & 201.3569     & 302.6724     &  260.5459    & 264.25       & 452.59       & 348.05       & 285.47       & 0.34879407   & 0.09625563  \\
+	63 & 141          & 87           & 0.0314610    & 0.238636     & 0.412698     & 0.487179     & 13.18        & 0.00127115   & 0.3005714420 & 35.97390     & ...          & 388.3136     & 179.7050     & 263.7363     &  196.1453    & 255.56       & 374.78       & 380.29       & 294.98       & 0.20000000   & 0.07572646  \\
+	64 & 143          & 87           & 0.0265806    & 0.317857     & 0.314607     & 0.250000     &  9.36        & 0.00085438   & 0.4349593520 & 31.22779     & ...          & 373.9316     & 178.3723     & 234.5216     &  133.0431    & 157.41       & 380.97       & 388.43       & 253.66       & 0.21212120   & 0.06769374  \\
+	65 & 145          & 87           & 0.0299856    & 0.354733     & 0.340491     & 0.594595     &  8.47        & 0.00137040   & 0.7788944840 & 44.64758     & ...          & 538.8488     & 200.7432     & 302.1978     &  219.6343    & 334.65       & 414.63       & 298.78       & 295.00       & 0.22533333   & 0.07275662  \\
+	66 & 147          & 87           & 0.0551686    & 0.221542     & 0.426778     & 0.443137     &  7.73        & 0.00218874   & 1.5159817930 & 36.18621     & ...          & 379.8962     & 205.4827     & 377.6978     &  274.6765    & 390.01       & 543.21       & 464.63       & 330.78       & 0.09345226   & 0.11421655  \\
+	67 & 149          & 87           & 0.0164987    & 0.271967     & 1.015380     & 0.227273     & 14.62        & 0.00151871   & 0.6092436910 & 29.03402     & ...          & 437.0629     & 188.7683     & 353.2182     &  210.4415    & 289.43       & 421.34       & 342.92       & 301.23       & 0.11682243   & 0.06215772  \\
+	68 & 151          & 87           & 0.0264557    & 0.299198     & 0.360153     & 0.340426     & 12.57        & 0.00132430   & 1.2737642530 & 25.69287     & ...          & 415.1317     & 218.7198     & 322.4150     &  278.1124    & 294.37       & 474.26       & 298.66       & 294.72       & 0.07342084   & 0.07763254  \\
+	69 & 153          & 87           & 0.0317563    & 0.345368     & 0.520710     & 0.458333     & 11.33        & 0.00138447   & 0.9622641210 & 37.22833     & ...          & 294.6650     & 192.8994     & 267.3797     &  237.1590    & 301.29       & 467.08       & 350.24       & 302.25       & 0.16323297   & 0.07570874  \\
+	70 & 155          & 87           & 0.0312279    & 0.408200     & 0.559823     & 0.386544     &  8.71        & 0.00145925   & 1.1296100620 & 31.37446     & ...          & 407.0929     & 200.2213     & 337.9095     &  262.9849    & 278.82       & 441.49       & 381.46       & 304.73       & 0.12516960   & 0.08183564  \\
+	71 & 157          & 87           & 0.0305908    & 0.278287     & 0.443681     & 0.377709     &  7.48        & 0.00191777   & 1.5096660850 & 39.16965     & ...          & 409.7771     & 192.4181     & 302.6162     &  245.7938    & 418.48       & 478.48       & 342.13       & 318.07       & 0.12467756   & 0.07771273  \\
+	72 & 159          & 87           & 0.0362330    & 0.243590     & 0.492940     & 0.476563     &  8.64        & 0.00158619   & 2.0192677970 & 27.76489     & ...          & 475.3228     & 260.2710     & 329.5464     &  265.4315    & 374.41       & 491.16       & 346.81       & 351.74       & 0.09146758   & 0.07705218  \\
+	73 & 161          & 87           & 0.0200070    & 0.482425     & 0.508197     & 0.451613     &  7.98        & 0.00124824   & 1.0052816870 & 31.34530     & ...          & 402.5045     & 201.5675     & 279.2492     &  251.4202    & 334.92       & 450.28       & 277.60       & 302.83       & 0.11024390   & 0.07362188  \\
+	74 & 163          & 87           & 0.0215728    & 0.310987     & 0.401198     & 0.455224     & 11.25        & 0.00136587   & 0.5353748800 & 34.01291     & ...          & 415.2824     & 196.5514     & 279.0347     &  238.6300    & 295.07       & 429.27       & 318.02       & 299.92       & 0.12108560   & 0.07472797  \\
+	75 & 165          & 87           & 0.0508341    & 0.340679     & 0.468531     & 0.432836     &  7.42        & 0.00151382   & 1.0783698560 & 38.74739     & ...          & 471.3424     & 203.0162     & 294.4124     &  267.6852    & 374.25       & 442.38       & 381.14       & 285.50       & 0.09595300   & 0.08548180  \\
+	76 & 167          & 87           & 0.0238285    & 0.362270     & 0.322581     & 0.371429     & 10.48        & 0.00155144   & 1.2752525810 & 35.09686     & ...          & 419.0362     & 221.0995     & 326.8283     &  253.0096    & 351.09       & 463.69       & 312.53       & 311.47       & 0.10925926   & 0.07687439  \\
+	77 & 169          & 87           & 0.0121033    & 0.343387     & 0.722973     & 0.448598     & 12.36        & 0.00109520   & 0.8008849620 & 37.70785     & ...          & 588.6970     & 190.5555     & 331.5650     &  206.6858    & 306.42       & 406.62       & 348.37       & 306.68       & 0.13720317   & 0.08280677  \\
+	78 & 171          & 87           & 0.0243954    & 0.175649     & 0.909091     & 0.458333     &  8.67        & 0.00157442   & 1.1521335840 & 31.15306     & ...          & 412.5212     & 224.7224     & 339.9547     &  253.6207    & 288.32       & 452.53       & 341.77       & 324.06       & 0.08207343   & 0.07735254  \\
+	79 & 173          & 87           & 0.0139937    & 0.530435     & 0.327869     & 0.150000     &  6.64        & 0.00316379   & 0.0000203422 & 37.72702     & ...          & 213.6752     & 175.1604     & 267.0940     &  204.3792    & 193.01       & 334.44       & 414.68       & 304.32       & 0.41975310   & 0.07462687  \\
+	80 & 175          & 87           & 0.0164932    & 0.350348     & 0.410596     & 0.387097     &  7.31        & 0.00164549   & 0.6878306870 & 46.41461     & ...          & 402.5045     & 172.6453     & 317.3394     &  257.8734    & 627.02       & 344.06       & 357.69       & 298.33       & 0.10230179   & 0.08436658  \\
+	81 & 179          & 87           & 0.0318720    & 0.377543     & 0.328664     & 0.426230     &  9.90        & 0.00147820   & 1.2816901210 & 38.44067     & ...          & 361.1018     & 241.0034     & 342.6819     &  270.4866    & 349.63       & 459.32       & 387.16       & 376.45       & 0.13481072   & 0.08703093  \\
+	82 & 181          & 87           & 0.0729479    & 0.182590     & 0.343023     & 0.548023     &  7.06        & 0.00172948   & 1.5702811480 & 27.59179     & ...          & 365.4716     & 279.2273     & 325.0271     &  213.5822    & 290.69       & 453.53       & 317.23       & 286.45       & 0.10003893   & 0.07977433  \\
+	83 & 183          & 87           & 0.0568423    & 0.204216     & 0.381908     & 0.367347     & 12.15        & 0.00212751   & 4.3887586590 & 48.76492     & ...          & 528.5593     & 306.0835     & 430.0697     &  348.2754    & 444.45       & 597.95       & 453.08       & 362.99       & 0.08527010   & 0.09935585  \\
+	84 & 185          & 87           & 0.0108703    & 0.195266     & 2.121210     & 0.442857     &  5.38        & 0.00122210   & 0.3887587790 & 40.82454     & ...          & 331.5650     & 167.3726     & 264.4231     & 2177.0681    & 247.72       & 381.33       & 367.25       & 300.13       & 0.04968944   & 0.07008217  \\
+	85 & 187          & 87           & 0.0345231    & 0.332669     & 0.443114     & 0.432432     &  6.98        & 0.00116911   & 0.4427710770 & 34.71814     & ...          & 421.3483     & 170.5293     & 282.0513     &  183.1502    & 297.14       & 390.94       & 356.91       & 267.08       & 0.29048842   & 0.07794872  \\
+	86 & 189          & 87           & 0.0313130    & 0.161381     & 0.300578     & 0.288462     & 12.27        & 0.00227837   & 1.1019108300 & 31.33022     & ...          & 354.2510     & 180.9359     & 369.4332     &  253.2281    & 304.72       & 427.84       & 451.79       & 297.19       & 0.05719921   & 0.15092644  \\
+	87 & 191          & 87           & 0.0458895    & 0.172257     & 0.450000     & 0.421053     &  9.59        & 0.00122733   & 1.7725632190 & 32.74533     & ...          & 400.8570     & 230.9888     & 320.0345     &  238.4958    & 295.26       & 334.55       & 375.45       & 327.62       & 0.08616445   & 0.08828809  \\
+	88 & 193          & 87           & 0.0235277    & 0.266055     & 0.588859     & 0.423423     &  5.86        & 0.00117887   & 0.8138297800 & 28.51783     & ...          & 480.1948     & 268.3836     & 365.0196     &  295.9352    & 295.63       & 468.26       & 337.88       & 348.74       & 0.11050157   & 0.07819394  \\
+	89 & 193          & 87           & 0.0235277    & 0.266055     & 0.588859     & 0.423423     &  5.86        & 0.00117887   & 0.8138297800 & 28.51783     & ...          & 480.1948     & 268.3836     & 365.0196     &  295.9352    & 295.63       & 468.26       & 337.88       & 348.74       & 0.11050157   & 0.07819394  \\
+	90 & 195          & 87           & 0.0313973    & 0.201397     & 1.670520     & 0.470588     & 13.02        & 0.00445923   & 1.7459893230 & 53.66693     & ...          & 377.9356     & 246.0614     & 411.4330     &  296.8684    & 392.27       & 480.79       & 303.11       & 337.28       & 0.15612382   & 0.07945071  \\
+	91 & 197          & 87           & 0.0141928    & 0.207595     & 1.182930     & 0.360825     & 12.23        & 0.00118573   & 0.8898809550 & 25.95258     & ...          & 341.8803     & 182.8020     & 348.1432     &  212.8205    & 322.92       & 391.72       & 385.65       & 306.85       & 0.06756757   & 0.07419893  \\
+	92 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+	93 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+	94 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+	95 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+	96 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+	97 &  NA          & NA           &        NA    &       NA     &       NA     &       NA     &    NA        &         NA   &           NA &       NA     & ...          &       NA     &       NA     &       NA     &        NA    &     NA       &     NA       &     NA       &     NA       &         NA   &         NA  \\
+\end{tabular}
+
+
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_6_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} scatterplotMatrix\PY{p}{(}data\PY{p}{[}\PY{l+m}{3}\PY{o}{:}\PY{l+m}{10}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} hist\PY{p}{(}data\PY{o}{\PYZdl{}}taxpc\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_8_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  6 NA
+\item
+  take out year column
+\item
+  "prbarr" max \textgreater{} 1
+\item
+  "prbconv" strange characters and blank spaces; also the probability is
+  bigger than 1
+\item
+  taxpc, what is the unit, what does it mean? Outlier at 119. Is the
+  unit \%?
+\item
+  pctmin80 data is too old
+\item
+  15-23: different industry avg. wages
+\item
+  24 mix: ratio of face-to-face crime
+\item
+  percentage young male (what is the age:15-24)
+\end{enumerate}
+
+Plan before Thrusday: 1. research question 2. identify the relevant
+variables
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  remove NA
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} data \PY{o}{\PYZlt{}\PYZhy{}} na.omit\PY{p}{(}data\PY{p}{)}
+        \PY{k+kp}{summary}\PY{p}{(}data\PY{p}{)}
+\end{Verbatim}
+
+    
+    \begin{verbatim}
+     county           year        crmrte             prbarr       
+ Min.   :  1.0   Min.   :87   Min.   :0.005533   Min.   :0.09277  
+ 1st Qu.: 52.0   1st Qu.:87   1st Qu.:0.020927   1st Qu.:0.20568  
+ Median :105.0   Median :87   Median :0.029986   Median :0.27095  
+ Mean   :101.6   Mean   :87   Mean   :0.033400   Mean   :0.29492  
+ 3rd Qu.:152.0   3rd Qu.:87   3rd Qu.:0.039642   3rd Qu.:0.34438  
+ Max.   :197.0   Max.   :87   Max.   :0.098966   Max.   :1.09091  
+    prbconv           prbpris           avgsen           polpc          
+ Min.   :0.06838   Min.   :0.1500   Min.   : 5.380   Min.   :0.0007459  
+ 1st Qu.:0.34541   1st Qu.:0.3648   1st Qu.: 7.340   1st Qu.:0.0012308  
+ Median :0.45283   Median :0.4234   Median : 9.100   Median :0.0014853  
+ Mean   :0.55128   Mean   :0.4108   Mean   : 9.647   Mean   :0.0017022  
+ 3rd Qu.:0.58886   3rd Qu.:0.4568   3rd Qu.:11.420   3rd Qu.:0.0018768  
+ Max.   :2.12121   Max.   :0.6000   Max.   :20.700   Max.   :0.0090543  
+    density            taxpc             west           central      
+ Min.   :0.00002   Min.   : 25.69   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.54741   1st Qu.: 30.66   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.96226   Median : 34.87   Median :0.0000   Median :0.0000  
+ Mean   :1.42884   Mean   : 38.06   Mean   :0.2527   Mean   :0.3736  
+ 3rd Qu.:1.56824   3rd Qu.: 40.95   3rd Qu.:0.5000   3rd Qu.:1.0000  
+ Max.   :8.82765   Max.   :119.76   Max.   :1.0000   Max.   :1.0000  
+     urban            pctmin80           wcon            wtuc      
+ Min.   :0.00000   Min.   : 1.284   Min.   :193.6   Min.   :187.6  
+ 1st Qu.:0.00000   1st Qu.: 9.845   1st Qu.:250.8   1st Qu.:374.6  
+ Median :0.00000   Median :24.312   Median :281.4   Median :406.5  
+ Mean   :0.08791   Mean   :25.495   Mean   :285.4   Mean   :411.7  
+ 3rd Qu.:0.00000   3rd Qu.:38.142   3rd Qu.:314.8   3rd Qu.:443.4  
+ Max.   :1.00000   Max.   :64.348   Max.   :436.8   Max.   :613.2  
+      wtrd            wfir            wser             wmfg      
+ Min.   :154.2   Min.   :170.9   Min.   : 133.0   Min.   :157.4  
+ 1st Qu.:190.9   1st Qu.:286.5   1st Qu.: 229.7   1st Qu.:288.9  
+ Median :203.0   Median :317.3   Median : 253.2   Median :320.2  
+ Mean   :211.6   Mean   :322.1   Mean   : 275.6   Mean   :335.6  
+ 3rd Qu.:225.1   3rd Qu.:345.4   3rd Qu.: 280.5   3rd Qu.:359.6  
+ Max.   :354.7   Max.   :509.5   Max.   :2177.1   Max.   :646.9  
+      wfed            wsta            wloc            mix         
+ Min.   :326.1   Min.   :258.3   Min.   :239.2   Min.   :0.01961  
+ 1st Qu.:400.2   1st Qu.:329.3   1st Qu.:297.3   1st Qu.:0.08073  
+ Median :449.8   Median :357.7   Median :308.1   Median :0.10186  
+ Mean   :442.9   Mean   :357.5   Mean   :312.7   Mean   :0.12884  
+ 3rd Qu.:478.0   3rd Qu.:382.6   3rd Qu.:329.2   3rd Qu.:0.15175  
+ Max.   :598.0   Max.   :499.6   Max.   :388.1   Max.   :0.46512  
+    pctymle       
+ Min.   :0.06216  
+ 1st Qu.:0.07443  
+ Median :0.07771  
+ Mean   :0.08396  
+ 3rd Qu.:0.08350  
+ Max.   :0.24871  
+    \end{verbatim}
+
+    
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  take out year column
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} data\PYZus{}clean \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{subset}\PY{p}{(}data\PY{p}{,}select\PY{o}{=}\PY{o}{\PYZhy{}}\PY{k+kt}{c}\PY{p}{(}year\PY{p}{)}\PY{p}{)}
+        \PY{k+kp}{objects}\PY{p}{(}data\PYZus{}clean\PY{p}{)}
+\end{Verbatim}
+
+    \begin{enumerate*}
+\item 'avgsen'
+\item 'central'
+\item 'county'
+\item 'crmrte'
+\item 'density'
+\item 'mix'
+\item 'pctmin80'
+\item 'pctymle'
+\item 'polpc'
+\item 'prbarr'
+\item 'prbconv'
+\item 'prbpris'
+\item 'taxpc'
+\item 'urban'
+\item 'wcon'
+\item 'west'
+\item 'wfed'
+\item 'wfir'
+\item 'wloc'
+\item 'wmfg'
+\item 'wser'
+\item 'wsta'
+\item 'wtrd'
+\item 'wtuc'
+\end{enumerate*}
+
+
+    
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  "prbarr" max \textgreater{} 1
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} hist\PY{p}{(}data\PY{o}{\PYZdl{}}prbarr\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} data\PYZus{}clean \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{subset}\PY{p}{(}data\PYZus{}clean\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr \PY{o}{\PYZlt{}}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  "prbconv" strange characters and blank spaces; also the probability is
+  bigger than 1 \textbf{this is taken care of in data import}
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} data\PYZus{}clean \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{subset}\PY{p}{(}data\PYZus{}clean\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}prbconv \PY{o}{\PYZlt{}}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  taxpc, what is the unit, what does it mean? Outlier at 119. Is the
+  unit \%? \textbf{Not sure what to do with this}
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}taxpc\PY{p}{,} breaks\PY{o}{=}\PY{l+m}{50}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    no evidence to say whether the data has anomaly or not, and we are not
+sure what the data means
+
+    \subsubsection{EDA}\label{eda}
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  distribution of crimes committed per person
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{50}\PY{p}{)}
+         hist\PY{p}{(}\PY{k+kp}{log}\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PY{p}{)}\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{50}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}mix\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{50}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_26_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} install.packages\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{corrplot\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Installing package into 'D:/Users/Owner/Documents/R/win-library/3.5'
+(as 'lib' is unspecified)
+Warning message:
+"unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/3.5:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/3.5/PACKAGES'"
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+package 'corrplot' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\textbackslash{}Users\textbackslash{}Owner\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Temp\textbackslash{}RtmpiuEB7F\textbackslash{}downloaded\_packages
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{c+c1}{\PYZsh{} correlation plot}
+         \PY{k+kn}{library}\PY{p}{(}corrplot\PY{p}{)}
+         corrplot\PY{p}{(}cor\PY{p}{(}data\PYZus{}clean\PY{p}{[}\PY{p}{,}\PY{k+kp}{sapply}\PY{p}{(}data\PYZus{}clean\PY{p}{,}\PY{k+kp}{is.numeric}\PY{p}{)}\PY{p}{]}\PY{p}{)}\PY{p}{,}is.corr\PY{o}{=}\PY{n+nb+bp}{T}\PY{p}{,}  type\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{upper\PYZsq{}}\PY{p}{,}main \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Correlation Plot\PYZdq{}}\PY{p}{,} tl.cex\PY{o}{=}\PY{l+m}{1.5}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_28_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+    Dependent variable: crmrte, mix
+
+prbarr, prbconv
+
+taxpc?
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  crmrte: prbarr, prbconv, wage variables are positively correlated
+\item
+  mix: prbarr, prbconv, wage variables are negatively correlated
+\end{enumerate}
+
+    Research Question:
+
+    \textbf{Research Question}: How to reduce crime rate? 1. sub-quest: how
+to reduce crime rate by increasing the arrest probability for non
+face-to-face crime
+
+Logics: 1. mix is positively correlated with prbarr 2. higher percentage
+of face-to-face crime positively correlates with higher prbarr 3. the
+percentage of non face-to-face crime is much higher
+
+    model 1: crmrte = \$\beta\_0 + \beta\_1 * prbarr + \beta\_2 * prbconv +
+\beta\_3 * avgsen + \beta\_4 * prbpris + u \$
+
+model 2: crmrte = \$\beta\_0 + \beta\_1 * prbarr + \beta\_2 * prbconv +
+\beta\_3 * avgsen + \beta\_4 * prbpris + u \$ prbarr =
+\(\gamma_0 + \gamma_1 * mix + \gamma_2 * polpc v\) 
+
+    Based on the understanding of what each parameter stands for, we have
+chosen crmrte as the only dependent variable to use for our analysis.
+The variable is a direct indicator of average crime commited to North
+Carolina counties. To start with, we took a look at the distribution of
+the dataset
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k+kp}{options}\PY{p}{(}repr.plot.height \PY{o}{=} \PY{l+m}{10}\PY{p}{,} repr.plot.width \PY{o}{=} \PY{l+m}{12}\PY{p}{,} repr.plot.pointsize \PY{o}{=} \PY{l+m}{32}\PY{p}{)}
+         
+         hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PY{p}{,} breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Logorithm of Crime Per Capita\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_35_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The distribution of crmrte does not look particularly normal, we decided
+to take the logorithm of and replot the histogram
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} hist\PY{p}{(}\PY{k+kp}{log}\PY{p}{(}data\PY{o}{\PYZdl{}}crmrte\PY{p}{)}\PY{p}{,} breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,} main\PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Logorithm of Crime Per Capita\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_37_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Looking at the other variables, and the simple correlation plot in
+initial EDA, we are proposing the explanatory variables that we believe
+contribute to crime rate: 1. prbarr: the probability of arrest should be
+a direct contributing factor to crime rate. In other words, if people
+who have potential to commit a crime believe the chance of them getting
+arrested is small, then it might encourage them to commit a crime 2.
+prbconv: after getting arrested, getting suspects convicted are the only
+way to let them take the punishment they deserve. 3. prbpris 4. avgsen:
+both probability of prison sentence reflect the severity of the
+punishment, which should directly impact the crime rate With the above
+being proposed, we decided to take a look at the distribution of each
+explanatory variable
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,}main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_39_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbconv\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,}main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbconv\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbconv\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbpris\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,}main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbpris\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbpris\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_41_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}avgsen\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,}main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{avgsen\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{avgsen\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_42_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The above histograms of each explanatory variable all seem rather
+normally distributed, while the dependent variable seems rather skewed.
+However, after taking the log transformation, the dependent variable
+seems rather normally distributed. That being said, we need a log
+transformed version of the dependent varible to minimize the standard
+error.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{log}\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} hist\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log\PY{p}{,} breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{log transformation of crime rate per capita\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_45_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{\texorpdfstring{Fitting model 1:
+}{Fitting model 1:  }}\label{fitting-model-1}
+
+crmrte = \$\beta\_0 + \beta\_1 * prbarr + \beta\_2 * prbconv + \beta\_3
+* avgsen + \beta\_4 * prbpris + u \$ 
+
+    Before we come up with the model, we need to look at the scatter plot
+between each explanatory variable and the dependent variable to
+determine the model specification
+
+    First, we look at the \(prbarr\) variable
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr vs. crmrte\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr\PYZdq{}}\PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{crmrte\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_49_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}57}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbconv\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbconv vs. crmrte\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbprbconvarr\PYZdq{}}\PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{crmrte\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_50_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}58}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}prbpris\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbpris vs. crmrte\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbpris\PYZdq{}}\PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{crmrte\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_52_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}59}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}avgsen\PY{p}{,}data\PYZus{}clean\PY{o}{\PYZdl{}}crmrte\PYZus{}log\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{avgsen vs. crmrte\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{avgsen\PYZdq{}}\PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{crmrte\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_53_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    With the scatterplot between each explanatory variable with dependent
+variable, it seems that the specifications are linear for most
+explanatory variables except for \(prbpris\). \(Prbpris\) is showing
+more of second order parabolic shape with the log transformed crime rate
+data, and therefore we are using the square of \(prbpris\) in our model
+building process
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} install.packages\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{stargazer\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Installing package into 'D:/Users/Owner/Documents/R/win-library/3.5'
+(as 'lib' is unspecified)
+Warning message:
+"unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/3.5:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/3.5/PACKAGES'"
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+package 'stargazer' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\textbackslash{}Users\textbackslash{}Owner\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Temp\textbackslash{}RtmpiuEB7F\textbackslash{}downloaded\_packages
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}96}]:} \PY{k+kn}{library}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{dplyr\PYZdq{}}\PY{p}{)}
+         \PY{k+kn}{library}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{stargazer\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}69}]:} data\PYZus{}clean\PY{o}{\PYZdl{}}prbpris\PYZus{}sq \PY{o}{\PYZlt{}\PYZhy{}} data\PYZus{}clean\PY{o}{\PYZdl{}}prbpris\PY{o}{\PYZca{}}\PY{l+m}{2}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}70}]:} model1 \PY{o}{\PYZlt{}\PYZhy{}} lm\PY{p}{(}crmrte\PYZus{}log \PY{o}{\PYZti{}} prbarr \PY{o}{+} prbconv \PY{o}{+} avgsen \PY{o}{+} prbpris\PYZus{}sq\PY{p}{,} data\PY{o}{=}data\PYZus{}clean\PY{p}{)}
+         model1
+\end{Verbatim}
+
+    
+    \begin{verbatim}
+
+Call:
+lm(formula = crmrte_log ~ prbarr + prbconv + avgsen + prbpris_sq, 
+    data = data_clean)
+
+Coefficients:
+(Intercept)       prbarr      prbconv       avgsen   prbpris_sq  
+  -2.302567    -2.632516    -0.967274     0.007842    -0.144082  
+
+    \end{verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}71}]:} \PY{k+kp}{mean}\PY{p}{(}model1\PY{o}{\PYZdl{}}residual\PY{p}{)}
+\end{Verbatim}
+
+    -5.78241158658936e-18
+
+    
+    \subsubsection{Other covariates}\label{other-covariates}
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  the percentage of face-to-face crime \(mix\) seems to have a strong
+  correlation with the \(prbarr\). This is reasonable because
+  face-to-face crimes tend to be more severe crimes that lead to much
+  more intensive police search and arrest effort. Therefore, the key
+  should really be to increase the percentage of non face-to-face
+  arrest. 
+\item
+  At the same time, the density and distribution of police forces
+  \(polpc\) should be one of the most important factor leading to arrest
+  when a crime is commited
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}82}]:} hist\PY{p}{(}data\PY{o}{\PYZdl{}}mix\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{mix\PYZdq{}}\PY{p}{)}
+         hist\PY{p}{(}data\PY{o}{\PYZdl{}}polpc\PY{p}{,}breaks\PY{o}{=}\PY{l+m}{20}\PY{p}{,}main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{polpc\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_62_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_62_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The distribution of police forces density is mostly normally distributed
+and with one point very far away from the other data. To get to know
+this row of data better, we printed it out below:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}102}]:} check1 \PY{o}{\PYZlt{}\PYZhy{}} data\PYZus{}clean\PY{p}{[}\PY{k+kp}{which}\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}polpc \PY{o}{==} \PY{k+kp}{max}\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}polpc\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{p}{]}
+          stargazer\PY{p}{(}check1\PY{p}{,}type\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{latex\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+\% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+\% Date and time: Fri, Nov 23, 2018 - 4:34:33 PM
+\textbackslash{}begin\{table\}[!htbp] \textbackslash{}centering 
+  \textbackslash{}caption\{\} 
+  \textbackslash{}label\{\} 
+\textbackslash{}begin\{tabular\}\{@\{\textbackslash{}extracolsep\{5pt\}\}lccccccc\} 
+\textbackslash{}\textbackslash{}[-1.8ex]\textbackslash{}hline 
+\textbackslash{}hline \textbackslash{}\textbackslash{}[-1.8ex] 
+Statistic \& \textbackslash{}multicolumn\{1\}\{c\}\{N\} \& \textbackslash{}multicolumn\{1\}\{c\}\{Mean\} \& \textbackslash{}multicolumn\{1\}\{c\}\{St. Dev.\} \& \textbackslash{}multicolumn\{1\}\{c\}\{Min\} \& \textbackslash{}multicolumn\{1\}\{c\}\{Pctl(25)\} \& \textbackslash{}multicolumn\{1\}\{c\}\{Pctl(75)\} \& \textbackslash{}multicolumn\{1\}\{c\}\{Max\} \textbackslash{}\textbackslash{} 
+\textbackslash{}hline \textbackslash{}\textbackslash{}[-1.8ex] 
+county \& 1 \& 55.000 \&  \& 55 \& 55 \& 55 \& 55 \textbackslash{}\textbackslash{} 
+crmrte \& 1 \& 0.079 \&  \& 0.079 \& 0.079 \& 0.079 \& 0.079 \textbackslash{}\textbackslash{} 
+prbarr \& 1 \& 0.225 \&  \& 0.225 \& 0.225 \& 0.225 \& 0.225 \textbackslash{}\textbackslash{} 
+prbconv \& 1 \& 0.208 \&  \& 0.208 \& 0.208 \& 0.208 \& 0.208 \textbackslash{}\textbackslash{} 
+prbpris \& 1 \& 0.304 \&  \& 0.304 \& 0.304 \& 0.304 \& 0.304 \textbackslash{}\textbackslash{} 
+avgsen \& 1 \& 13.570 \&  \& 13.570 \& 13.570 \& 13.570 \& 13.570 \textbackslash{}\textbackslash{} 
+polpc \& 1 \& 0.004 \&  \& 0.004 \& 0.004 \& 0.004 \& 0.004 \textbackslash{}\textbackslash{} 
+density \& 1 \& 0.512 \&  \& 0.512 \& 0.512 \& 0.512 \& 0.512 \textbackslash{}\textbackslash{} 
+taxpc \& 1 \& 119.761 \&  \& 119.761 \& 119.761 \& 119.761 \& 119.761 \textbackslash{}\textbackslash{} 
+west \& 1 \& 0.000 \&  \& 0 \& 0 \& 0 \& 0 \textbackslash{}\textbackslash{} 
+central \& 1 \& 0.000 \&  \& 0 \& 0 \& 0 \& 0 \textbackslash{}\textbackslash{} 
+urban \& 1 \& 0.000 \&  \& 0 \& 0 \& 0 \& 0 \textbackslash{}\textbackslash{} 
+pctmin80 \& 1 \& 6.496 \&  \& 6.496 \& 6.496 \& 6.496 \& 6.496 \textbackslash{}\textbackslash{} 
+wcon \& 1 \& 309.524 \&  \& 309.524 \& 309.524 \& 309.524 \& 309.524 \textbackslash{}\textbackslash{} 
+wtuc \& 1 \& 445.276 \&  \& 445.276 \& 445.276 \& 445.276 \& 445.276 \textbackslash{}\textbackslash{} 
+wtrd \& 1 \& 189.744 \&  \& 189.744 \& 189.744 \& 189.744 \& 189.744 \textbackslash{}\textbackslash{} 
+wfir \& 1 \& 284.593 \&  \& 284.593 \& 284.593 \& 284.593 \& 284.593 \textbackslash{}\textbackslash{} 
+wser \& 1 \& 221.390 \&  \& 221.390 \& 221.390 \& 221.390 \& 221.390 \textbackslash{}\textbackslash{} 
+wmfg \& 1 \& 319.210 \&  \& 319.210 \& 319.210 \& 319.210 \& 319.210 \textbackslash{}\textbackslash{} 
+wfed \& 1 \& 338.910 \&  \& 338.910 \& 338.910 \& 338.910 \& 338.910 \textbackslash{}\textbackslash{} 
+wsta \& 1 \& 361.680 \&  \& 361.680 \& 361.680 \& 361.680 \& 361.680 \textbackslash{}\textbackslash{} 
+wloc \& 1 \& 326.080 \&  \& 326.080 \& 326.080 \& 326.080 \& 326.080 \textbackslash{}\textbackslash{} 
+mix \& 1 \& 0.084 \&  \& 0.084 \& 0.084 \& 0.084 \& 0.084 \textbackslash{}\textbackslash{} 
+pctymle \& 1 \& 0.076 \&  \& 0.076 \& 0.076 \& 0.076 \& 0.076 \textbackslash{}\textbackslash{} 
+crmrte\textbackslash{}\_log \& 1 \& \$-\$2.538 \&  \& \$-\$2.538 \& \$-\$2.538 \& \$-\$2.538 \& \$-\$2.538 \textbackslash{}\textbackslash{} 
+prbpris\textbackslash{}\_sq \& 1 \& 0.093 \&  \& 0.093 \& 0.093 \& 0.093 \& 0.093 \textbackslash{}\textbackslash{} 
+\textbackslash{}hline \textbackslash{}\textbackslash{}[-1.8ex] 
+\textbackslash{}end\{tabular\} 
+\textbackslash{}end\{table\} 
+
+    \end{Verbatim}
+
+    
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}78}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}mix\PY{p}{,} data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{mix vs. prbarr\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{mix\PYZdq{}}\PY{p}{,}ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_67_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}80}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}polpc\PY{p}{,} data\PYZus{}clean\PY{o}{\PYZdl{}}prbarr\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{polpc vs. prbarr\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{polpc\PYZdq{}}\PY{p}{,}ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prbarr\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_68_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}81}]:} scatterplot\PY{p}{(}data\PYZus{}clean\PY{o}{\PYZdl{}}polpc\PY{p}{,} data\PYZus{}clean\PY{o}{\PYZdl{}}mix\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{polpc vs. mix\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{polpc\PYZdq{}}\PY{p}{,}ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{mix\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_69_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}73}]:} model2 \PY{o}{\PYZlt{}\PYZhy{}} lm\PY{p}{(}prbarr \PY{o}{\PYZti{}} mix \PY{o}{+} polpc\PY{p}{,} data\PY{o}{=}data\PYZus{}clean\PY{p}{)}
+         model2
+\end{Verbatim}
+
+    
+    \begin{verbatim}
+
+Call:
+lm(formula = prbarr ~ mix + polpc, data = data_clean)
+
+Coefficients:
+(Intercept)          mix        polpc  
+     0.2589       0.6932     -34.9780  
+
+    \end{verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
