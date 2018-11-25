@@ -160,6 +160,7 @@ model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + nonFtf + taxpc +
 model2
 ```
 
+Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant  
 
 
 
