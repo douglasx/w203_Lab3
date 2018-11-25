@@ -1,11 +1,9 @@
 ---
-title: "w203_Lab3_group5_draft1"
-output: html_document
+title: "w203_Lab3_group5_draft1: Joanna wang, Douglas(Zeliang) Xu"
+output:
+  html_document: default
+  pdf_document: default
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ### Part1: Looking at the data
 
@@ -96,12 +94,12 @@ corrplot(cor(data_clean[,sapply(data_clean,is.numeric)]),is.corr=T, method = "ci
 ```
 
 ### Research Question
-After the initial data cleaning and data analysis, we have defined our research question to be: how to reduce crime rate within North Carolina, and especially how to reduce crime rate by increasing the arrest probability for non face-to-face crime
+After the initial data cleaning and data analysis, we have defined our research question to be: how to reduce crime rate within North Carolina, and especially what are the most effective measures in reducing crime rate that might have been neglected before.
 
 The question is asked to help the political campaign to propose effective strategies to reduce crime rate, especially in the area that might have been neglected before. From the simple correlation plot, we found that variable $mix$ has strong positive correlation with $prbarr$. It can make sense because face-to-face crimes are more severe and usually have more police concentration and resources that lead to higher probability of arrest. However, it might not be very easy for non face-to-face crime, which is still the majority of crimes that happened, but actually seem to have pretty low arrest rate. This conclusion can be obtained by the fact that crime rate ($crmrte$) is negatively correlated with probability of arrest($prbarr$) while percentage of face-to-face crime ($mix$) is positively correlated with probability of arrest ($prbarr$). Therefore, how to increase $prbarr$ for non face-to-face crime is really the strategy we need to focus our energy on.
 
 ### Fitting model 1
-__model 1__: crmrte = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + u $ <br>
+__model 1__: $crmrte = \beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + u $ <br>
 
 Based on the understanding of what each parameter stands for, we have chosen crmrte as the only dependent variable to use for our analysis. The variable is a direct indicator of average crime commited to North Carolina counties. To start with, we took a look at the distribution of the dataset.<br>
 
@@ -140,6 +138,26 @@ hist(data_clean$avgsen,breaks=50,main="avgsen", xlab="avgsen")
 ```
 The above histograms of each explanatory variable all seem rather normally distributed, with some anomalies implied in $prbarr$ and $avgsen$. However, we don't think there is enough evidence to make a decision on whether the data is anomaly or not, and we will use the data for model building.
 
+
+Next, we want to look at the scatterplot between each key explanatory variable and the dependent variable to decide on model specification:
+
+```{r }
+scatterplot(data_clean$prbarr,data_clean$crmrte_log, main="prbarr vs. crmrte_log", xlab="prbarr", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$prbconv,data_clean$crmrte_log, main="prbconv vs. crmrte_log", xlab="prbconv", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$prbpris,data_clean$crmrte_log, main="prbpris vs. crmrte_log", xlab="prbpris", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$avgsen,data_clean$crmrte_log, main="avgsen vs. crmrte_log", xlab="avgsen", ylab="crmrte_log")
+```
+From the above scatterplots, we believe that the explanatory variables are displaying relatively linear relationship with dependent variable except for $prbpris$, which seems to be more in parabolic shape. Therefore, we have decided to create a new variable with square of probability of prison to better reveal the linearity.
+```{r }
+data_clean$prbpris_sq <- data_clean$prbpris^2
+```
+
 _Fitting model 1__:<br>
 With the above explained reason, we are building the model1 with the explanatory variable of key interest as below:<br>
 crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + u $ 
@@ -149,19 +167,92 @@ model1 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris, data=data_clean)
 model1
 ```
 
+### Fitting model 2
+Based on the analysis from research question section, we do believe that the variable $mix$ has certain influence on crime rate, especially in $prbarr$. The fact that $prbarr$ has strong correlation with $mix$ lead us to think that we should really be focusing on the portion of crime that is non face-to-face, which has relatively low $prbarr$. Therefore, we are adding an extra column that reflects percentage of non face-to-face crime: <br>
+
+```{r}
+data_clean$nonFtF <- 1-data_clean$mix
+scatterplot(data_clean$nonFtF,data_clean$crmrte_log, main="non-Ftf vs. crmrte_log", xlab="nonFtF", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$nonFtF,data_clean$prbarr, main="non-Ftf vs. prbarr", xlab="nonFtF", ylab="prbarr")
+
+1. mix: The above two scatterplot show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
+
+2. polpc: the magnitude of the $polpc$ is at least 100 times smaller than the other probability variables, and we believe that it might add some imbalance in our model building process, therefore we decided to create another variable that is 100 times of polpc:
+```{r }
+data_clean$polpcMult <- data_clean$polpc*100
+```
 _Fitting model 2__:<br>
-With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. For the purpose of building the model, we added two additional variables: nonFtF and polpcMult. nonFtf is the transformation of mix. It represent the non face to face offense. And polpcMult is the transformation of polpc. We need to multiply polpc by 100 becuase the numbers are too small. Without the multiplication, polpc skewed the model significantly. After the data transformation, the model is as below: <br>
-crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * nonFtf + \beta_6 * taxpc + \beta_7 * urban + \beta_8 * pctymle + \beta_9 * popcMutl + u $ 
+With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. For the purpose of building the model, we added two additional variables: $nonFtF$ and $polpcMult$. $nonFtf$ is the transformation of mix. It represent the non face to face offense. And $polpcMult$ is the transformation of polpc. We need to multiply polpc by 100 becuase the numbers are too small. Without the multiplication, polpc skewed the model significantly. After the data transformation, the model is as below: <br>
+crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * nonFtf + \beta_6 * taxpc + \beta_7 * urban + \beta_8 * pctymle + \beta_9 * polpcMutl + u $ 
 
 ```{r }
 data_clean$nonFtf <- (1- data_clean$mix)
 data_clean$polpcMult <- data_clean$polpc * 100
-model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + nonFtf + taxpc + urban + pctymle + polpcMult, data=data_clean)
+model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris_sq + nonFtf + taxpc + urban + pctymle + polpcMult, data=data_clean)
 model2
 ```
-
 Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant  
 
+### Fitting model 3
+Bringing in other covariates that we do not believe to be too relavent:
+
+```{r}
+model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris_sq+avgsen+polpcMult+density+taxpc+west+central+urban+pctmin80+wcon+wtuc+wtrd+wfir+wser+wmfg+wfed+wsta+wloc+nonFtf+pctymle, data=data_clean)
+model3
+```
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(stargazer)
+```
+
+Here is the latex table in a PDF document:
+
+```{r mylatextable, results = "asis"}
+stargazer(model1,model2,model3, type = 'html')
+
+```
+
+
+### Omitted Variable
+
+1. __education level__: One aspect of education level that is measurable would be the years of education $year_educ$. <br>
+The years of education could result in the biase over how much impact the percentage of young males $pctymle$ is correlated with $crmrte_log$. With the addition of education level, $pctymle$ should really become vague as a explanatory variable. In its place, there should be most likely $pctymle_lowEduc$ (percentage of low-education (<6 years) male) that is really more correlated. The bias from this omiitted variabled should be towards zero.
+
+2. __surveillance camera__: Number of surveillance cameras $surCams$ has some impact on the prbability of arrest and the crime rate:
+Leaving other variables unchanged, we assume that:
+$crmrte_log = \beta_0 + \beta_1 * prbarr + \beta_2 * surCams + u $
+$surCams = \gamma_0 + \gamma_1 * prbarr + v $
+
+Based on our understanding, $\gamma_1$ should be positive, and $\beta_2$ should be negative. $\beta_1$ is negative. Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more negative, gaining statistical significance.
+
+3. __economic growth__: The annual growth in economic $ecoGrowth$ will lead to more job availability and increase in tax income, and will give more funding to the government to hire police forces.
+
+$crmrte_log = \beta_0 + \beta_1 * taxpc + \beta_2 * ecoGrowth + u $
+$ecoGrowth = \gamma_0 + \gamma_1 * taxpc + v $
+Based on our understanding, $\gamma_1$ should be positive, if $\beta_2$ is positive, and $\beta_1$ is positive Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more positive, gaining statistical significance.
+
+
+4. __arrest rate for minor crimes__: the rate or probability of arrest for minor crimes (vandalism, public drinking, etc.) $prbarr_minor$ is the biggest percentage of overall crime rate, and it should be directly related to $prbarr$ and $crmrte_log$.
+
+$crmrte_log = \beta_0 + \beta_1 * prbarr + \beta_2 * prbarr_minor + u $
+$prbarr_minor = \gamma_0 + \gamma_1 * prbarr + v $
+Based on our understanding, $\gamma_1$ should be positive, indicating that actually reducing overall crime rate will usually reduce crime rate for minor crime, and vice versa; $\beta_2$ should be negative so OMVB=\beta_2\gamma_1<0, and $\beta_1$ is negative Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more negative, gaining statistical significance.
+
+
+5. __average age__: the average age is affecting the crime rate because it is usually the group of people under 30 that commit more crime than people over 30:
+$crmrte_log = \beta_0 + \beta_1 * pctymle + \beta_2 * avgAge + u $
+$avgAge = \gamma_0 + \gamma_1 * pctymle + v $
+$\gamma_1$ should be negative, and $\beta_2$ should be negative so OMVB=\beta_2\gamma_1>0, and $\beta_1$ is positive Therefore, the OLS coefficient of $pctymle$ will be scaled away to be more positive, gaining statistical significance.
+
+
+### Suggested Statistical Test:
+1. Heavier penalties and arrest rate for minor crimes: the analysis suggest that less severe crimes consist of the most crimes commited, and the arrest rate is low for this type of crime. One good test in this regard is to lift the penalties and arrest rate for minor crimes for about 2 weeks, and see if the overall crime rate over those two weeks go down.
 
 
 
