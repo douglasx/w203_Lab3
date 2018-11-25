@@ -148,14 +148,22 @@ crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen 
 model1 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris, data=data_clean)
 model1
 ```
-```{r }
-library(stargazer)
-```
+
+_Fitting model 2__:<br>
+With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. For the purpose of building the model, we added two additional variables: nonFtF and polpcMult. nonFtf is the transformation of mix. It represent the non face to face offense. And polpcMult is the transformation of polpc. We need to multiply polpc by 100 becuase the numbers are too small. Without the multiplication, polpc skewed the model significantly. After the data transformation, the model is as below: <br>
+crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * nonFtf + \beta_6 * taxpc + \beta_7 * urban + \beta_8 * pctymle + \beta_9 * popcMutl + u $ 
 
 ```{r }
-stargazer(model1, type = 'html')
-
+data_clean$nonFtf <- (1- data_clean$mix)
+data_clean$polpcMult <- data_clean$polpc * 100
+model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + nonFtf + taxpc + urban + pctymle + polpcMult, data=data_clean)
+model2
 ```
+
+Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant  
+
+
+
 
 
 
