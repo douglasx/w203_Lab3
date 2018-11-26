@@ -170,6 +170,7 @@ scatterplot(data_clean$nonFtF,data_clean$crmrte_log, main="non-Ftf vs. crmrte_lo
 ```
 ```{r }
 scatterplot(data_clean$nonFtF,data_clean$prbarr, main="non-Ftf vs. prbarr", xlab="nonFtF", ylab="prbarr")
+```
 
 1. mix: The above two scatterplot show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
 
