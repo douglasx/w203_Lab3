@@ -4,6 +4,8 @@ output:
   html_document: default
   pdf_document: default
 ---
+### Introduction
+In this report, we will analyze the crime statistics for a selection of counties in North Carolina and purpose to find out some main factors of crime rate. We will then purpose several policies that can potentially based on our research findings.
 
 ### Part1: Looking at the data
 
@@ -15,33 +17,25 @@ data <- read.csv(file="crime_v2.csv", header=TRUE, sep=",",na.strings=c("`","","
 objects(data)
 
 ```
-
+Here we have the summary of all the veriables in the data set, to spot any anormaly. 
 ```{r}
 summary(data)
 ```
-
+We noticed that there are 6 NAs in all the variables. To took a closer look at the last few rows of the date set to verify the NA entires.  
 ```{r}
 tail(data,11)
 ```
-
-```{r}
-hist(data$prbconv, breaks=20, main="prbconv", xlab="prbconv")
-```
-
-Some of the things we see in the dataset:
-1. 6 NA
-2. take out year column
-3. "prbarr" max > 1
+Some of the things we see in the dataset and have lead us to some decisions: 
+1. 6 NAs for all columns. We will remove those entries. 
+2. Year is alwasy 87. We will take out the year column, because it does not help us with our crime rate analysis
+3. "prbarr" max > 1. Probability should not be greater than 1. 
 4. "prbconv" strange characters and blank spaces; also the probability is bigger than 1
-5. taxpc, what is the unit, what does it mean? Outlier at 119. Is the unit %?
+5. taxpc, what is the unit, what does it mean? Outlier at 119. Is the unit %? 
 6. pctmin80 data is too old
 7. 15-23: different industry avg. wages
 8. 24 mix: ratio of face-to-face crime
 9. percentage young male (what is the age:15-24)
 
-```{r }
-hist(data$prbconv, breaks=20, main="prbconv", xlab="prbconv")
-```
 With the import method modified, we are able to address the missing values and the special character error in the $prbconv$ data column
 
 ### Data Cleaning
@@ -55,12 +49,12 @@ summary(data)
 data_clean <- subset(data,select=-c(year))
 objects(data_clean)
 ```
-3. "prbarr" max > 1
+3. "prbarr" max > 1. Becuase this variable is supposed to represent the probability of arrest, the max should never exceed 1. 
 ```{r }
 data_clean <- subset(data_clean,data_clean$prbarr <1)
 hist(data_clean$prbarr, breaks=20,  main="prbarr", xlab="prbarr")
 ```
-4. "prbconv" strange characters and blank spaces; also the probability is bigger than 1 <br>
+4. "prbconv" column contains strange characters and blank spaces; Also becuase this is the probability, it should not contain entries that are bigger than 1 <br>
 __blank space and strange characters are taken care of in data import__
 ```{r }
 data_clean <- subset(data_clean,data_clean$prbconv <1)
