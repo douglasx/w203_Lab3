@@ -1,0 +1,257 @@
+---
+title: "w203_Lab3_group5_draft1: Joanna wang, Douglas(Zeliang) Xu"
+output:
+  html_document: default
+  pdf_document: default
+---
+### Introduction
+In this report, we will analyze the crime statistics for a selection of counties in North Carolina and purpose to find out some main factors of crime rate. We will then purpose several policies that can potentially based on our research findings.
+
+### Part1: Looking at the data
+
+This part is to look at the dataset in general to grow our understand of the data:
+
+```{r }
+library(car)
+data <- read.csv(file="crime_v2.csv", header=TRUE, sep=",",na.strings=c("`","","NA"))
+objects(data)
+```
+Here we have the summary of all the veriables in the data set, to spot any anormaly. 
+```{r}
+summary(data)
+```
+We noticed that there are 6 NAs in all the variables. To took a closer look at the last few rows of the date set to verify the NA entires.  
+```{r}
+tail(data,11)
+```
+Some of the things we see in the dataset and have lead us to some decisions: 
+1. 6 NAs for all columns. We will remove those entries. 
+2. Year is alwasy 87. We will take out the year column, because it does not help us with our crime rate analysis
+3. "prbarr" max > 1. Probability should not be greater than 1. 
+4. "prbconv" strange characters and blank spaces; also the probability is bigger than 1
+5. taxpc, what is the unit, what does it mean? Outlier at 119. Is the unit %? 
+6. pctmin80 data is too old
+7. 15-23: different industry avg. wages
+8. 24 mix: ratio of face-to-face crime
+9. percentage young male (what is the age:15-24)
+
+With the import method modified, we are able to address the missing values and the special character error in the $prbconv$ data column
+
+### Data Cleaning
+1. remove NA
+```{r }
+data <- na.omit(data)
+summary(data)
+```
+2. take out year column as it does not mean anything in our analysis
+```{r }
+data_clean <- subset(data,select=-c(year))
+objects(data_clean)
+```
+3. "prbarr" max > 1. Becuase this variable is supposed to represent the probability of arrest, the max should never exceed 1. 
+```{r }
+data_clean <- subset(data_clean,data_clean$prbarr <1)
+hist(data_clean$prbarr, breaks=20,  main="prbarr", xlab="prbarr")
+```
+4. "prbconv" column contains strange characters and blank spaces; Also becuase this is the probability, it should not contain entries that are bigger than 1 <br>
+__blank space and strange characters are taken care of in data import__
+```{r }
+data_clean <- subset(data_clean,data_clean$prbconv <1)
+hist(data_clean$prbconv, breaks=20, main="prbconv", xlab="prbconv")
+```
+5. taxpc: There seems to be some anomaly that is very far apart from other data points, but we have no evidence to say whether the data has anomaly or not. It could be an error or it could just be that the county has high tax per capita
+```{r }
+hist(data_clean$taxpc, breaks=20, main="taxpc", xlab="taxpc")
+```
+6. over-paid service industry: we found that the maximum value of the avg. weekly wage of service industry is above 2000, which is way more than the other industries. Based on the background knowledge, we don't believe there should be significant difference between the service industry and other industries in terms of compensation difference, and the data point above 2000 should be an error in the data, and we decided to remove them
+
+```{r }
+data_clean <- subset(data_clean, data_clean$wser<1000)
+summary(data_clean$wser)
+```
+
+### EDA
+1. As the first part of the data analysis, we are taking a look at the distributions of the dependent variable:
+
+```{r }
+hist(data_clean$crmrte,breaks=50, main="crmrte", xlab="crmrte")
+```
+```{r }
+hist(log(data_clean$crmrte),breaks=50, main="Log transform of crmrte", xlab="Log of crmrte")
+```
+2. As the second part of the EDA, we take an initial look at the simple correlation between each variable inside the dataframe to help us understand the general correlations betwen each varible and the dependent variable to help identify the explanatory variables of interest
+```{r }
+# correlation plot
+library(corrplot)
+corrplot(cor(data_clean[,sapply(data_clean,is.numeric)]),is.corr=T, method = "circle", type='upper',main = "Correlation Plot", tl.cex=0.8)
+```
+
+### Research Question
+After the initial data cleaning and data analysis, we have defined our research question to be: how to reduce crime rate within North Carolina, and especially what are the most effective measures in reducing crime rate that might have been neglected before.
+
+The question is asked to help the political campaign to propose effective strategies to reduce crime rate, especially in the area that might have been neglected before. From the simple correlation plot, we found that variable $mix$ has strong positive correlation with $prbarr$. It can make sense because face-to-face crimes are more severe and usually have more police concentration and resources that lead to higher probability of arrest. However, it might not be very easy for non face-to-face crime, which is still the majority of crimes that happened, but actually seem to have pretty low arrest rate. This conclusion can be obtained by the fact that crime rate ($crmrte$) is negatively correlated with probability of arrest($prbarr$) while percentage of face-to-face crime ($mix$) is positively correlated with probability of arrest ($prbarr$). Therefore, how to increase $prbarr$ for non face-to-face crime is really the strategy we need to focus our energy on.
+
+### Fitting model 1
+__model 1__: $crmrte = \beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + u $ <br>
+
+Based on the understanding of what each parameter stands for, we have chosen crmrte as the only dependent variable to use for our analysis. The variable is a direct indicator of average crime commited to North Carolina counties. To start with, we took a look at the distribution of the dataset.<br>
+
+From the analysis of the EDA, the distribution of crmrte does not look particularly normal, but the log transformed crmrte looks much more normally distributed. To reduce the standard error in the model building process, we decided that in our model fitting, we are going to use the log transformed $crmrte$ as our dependent variable. <br>
+That being said, we are creating another variable that indicates the log transformed $crmrte$
+```{r }
+data_clean$crmrte_log <- log(data_clean$crmrte)
+hist(data_clean$crmrte_log, breaks=50, main="log transformation of 
+crime rate per capita")
+```
+Looking at the other variables, and the simple correlation plot in initial EDA, we are proposing the explanatory variables that we believe contribute to crime rate: <br>
+
+1. prbarr: the probability of arrest should be a direct contributing factor to crime rate. In other words, if people who have potential to commit a crime believe the chance of them getting arrested is small, then it might encourage them to commit a crime
+2. prbconv: after getting arrested, getting suspects convicted are the only way to let them take the punishment they deserve.
+3. prbpris
+4. avgsen: both probability of prison sentence reflect the severity of the punishment, which should directly impact the crime rate
+
+With the above being proposed, we decided to take a look at the distribution of each explanatory variable:
+
+```{r }
+# prbarr
+hist(data_clean$prbarr,breaks=50,main="prbarr", xlab="prbarr")
+```
+```{r }
+#prbconv
+hist(data_clean$prbconv,breaks=50,main="prbconv", xlab="prbconv")
+```
+```{r }
+#prbpris
+hist(data_clean$prbpris,breaks=50,main="prbpris", xlab="prbpris")
+```
+```{r }
+#avgsen
+hist(data_clean$avgsen,breaks=50,main="avgsen", xlab="avgsen")
+
+```
+The above histograms of each explanatory variable all seem rather normally distributed, with some anomalies implied in $prbarr$ and $avgsen$. However, we don't think there is enough evidence to make a decision on whether the data is anomaly or not, and we will use the data for model building.
+
+
+Next, we want to look at the scatterplot between each key explanatory variable and the dependent variable to decide on model specification:
+
+```{r }
+scatterplot(data_clean$prbarr,data_clean$crmrte_log, main="prbarr vs. crmrte_log", xlab="prbarr", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$prbconv,data_clean$crmrte_log, main="prbconv vs. crmrte_log", xlab="prbconv", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$prbpris,data_clean$crmrte_log, main="prbpris vs. crmrte_log", xlab="prbpris", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$avgsen,data_clean$crmrte_log, main="avgsen vs. crmrte_log", xlab="avgsen", ylab="crmrte_log")
+```
+From the above scatterplots, we believe that the explanatory variables are displaying relatively linear relationship with dependent variable except for $prbpris$, which seems to be more in parabolic shape. Therefore, we have decided to create a new variable with square of probability of prison to better reveal the linearity.
+```{r }
+data_clean$prbpris_sq <- data_clean$prbpris^2
+```
+
+_Fitting model 1__:<br>
+With the above explained reason, we are building the model1 with the explanatory variable of key interest as below:<br>
+crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + u $ 
+
+```{r }
+model1 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris, data=data_clean)
+model1
+```
+
+### Fitting model 2
+Based on the analysis from research question section, we do believe that the variable $mix$ has certain influence on crime rate, especially in $prbarr$. The fact that $prbarr$ has strong correlation with $mix$ lead us to think that we should really be focusing on the portion of crime that is non face-to-face, which has relatively low $prbarr$. Therefore, we are adding an extra column that reflects percentage of non face-to-face crime: <br>
+
+```{r}
+data_clean$nonFtF <- 1-data_clean$mix
+scatterplot(data_clean$nonFtF,data_clean$crmrte_log, main="non-Ftf vs. crmrte_log", xlab="nonFtF", ylab="crmrte_log")
+```
+```{r }
+scatterplot(data_clean$nonFtF,data_clean$prbarr, main="non-Ftf vs. prbarr", xlab="nonFtF", ylab="prbarr")
+```
+
+1. mix: The above two scatterplot show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
+
+2. polpc: the magnitude of the $polpc$ is at least 100 times smaller than the other probability variables, and we believe that it might add some imbalance in our model building process, therefore we decided to create another variable that is 100 times of polpc:
+```{r }
+data_clean$polpcMult <- data_clean$polpc*100
+```
+_Fitting model 2__:<br>
+With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. For the purpose of building the model, we added two additional variables: $nonFtF$ and $polpcMult$. $nonFtf$ is the transformation of mix. It represent the non face to face offense. And $polpcMult$ is the transformation of polpc. We need to multiply polpc by 100 becuase the numbers are too small. Without the multiplication, polpc skewed the model significantly. After the data transformation, the model is as below: <br>
+crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * nonFtf + \beta_6 * taxpc + \beta_7 * urban + \beta_8 * pctymle + \beta_9 * polpcMutl + u $ 
+
+```{r }
+data_clean$nonFtf <- (1- data_clean$mix)
+data_clean$polpcMult <- data_clean$polpc * 100
+model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris_sq + nonFtf + taxpc + urban + pctymle + polpcMult, data=data_clean)
+model2
+```
+Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant  
+
+### Fitting model 3
+Bringing in other covariates that we do not believe to be too relavent:
+
+```{r}
+model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris_sq+avgsen+polpcMult+density+taxpc+west+central+urban+pctmin80+wcon+wtuc+wtrd+wfir+wser+wmfg+wfed+wsta+wloc+nonFtf+pctymle, data=data_clean)
+model3
+```
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(stargazer)
+```
+
+Here is the latex table in a PDF document:
+
+```{r mylatextable, results = "asis"}
+stargazer(model1,model2,model3, type = 'html')
+
+```
+
+
+### Omitted Variable
+
+1. __education level__: One aspect of education level that is measurable would be the years of education $year_educ$. <br>
+The years of education could result in the biase over how much impact the percentage of young males $pctymle$ is correlated with $crmrte_log$. With the addition of education level, $pctymle$ should really become vague as a explanatory variable. In its place, there should be most likely $pctymle_lowEduc$ (percentage of low-education (<6 years) male) that is really more correlated. The bias from this omiitted variabled should be towards zero.
+
+2. __surveillance camera__: Number of surveillance cameras $surCams$ has some impact on the prbability of arrest and the crime rate:
+Leaving other variables unchanged, we assume that:
+$crmrte_log = \beta_0 + \beta_1 * prbarr + \beta_2 * surCams + u $
+$surCams = \gamma_0 + \gamma_1 * prbarr + v $
+
+Based on our understanding, $\gamma_1$ should be positive, and $\beta_2$ should be negative. $\beta_1$ is negative. Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more negative, gaining statistical significance.
+
+3. __economic growth__: The annual growth in economic $ecoGrowth$ will lead to more job availability and increase in tax income, and will give more funding to the government to hire police forces.
+
+$crmrte_log = \beta_0 + \beta_1 * taxpc + \beta_2 * ecoGrowth + u $
+$ecoGrowth = \gamma_0 + \gamma_1 * taxpc + v $
+Based on our understanding, $\gamma_1$ should be positive, if $\beta_2$ is positive, and $\beta_1$ is positive Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more positive, gaining statistical significance.
+
+
+4. __arrest rate for minor crimes__: the rate or probability of arrest for minor crimes (vandalism, public drinking, etc.) $prbarr_minor$ is the biggest percentage of overall crime rate, and it should be directly related to $prbarr$ and $crmrte_log$.
+
+$crmrte_log = \beta_0 + \beta_1 * prbarr + \beta_2 * prbarr_minor + u $
+$prbarr_minor = \gamma_0 + \gamma_1 * prbarr + v $
+Based on our understanding, $\gamma_1$ should be positive, indicating that actually reducing overall crime rate will usually reduce crime rate for minor crime, and vice versa; $\beta_2$ should be negative so OMVB=\beta_2\gamma_1<0, and $\beta_1$ is negative Therefore, the OLS coefficient of $prbarr$ will be scaled away to be more negative, gaining statistical significance.
+
+
+5. __average age__: the average age is affecting the crime rate because it is usually the group of people under 30 that commit more crime than people over 30:
+$crmrte_log = \beta_0 + \beta_1 * pctymle + \beta_2 * avgAge + u $
+$avgAge = \gamma_0 + \gamma_1 * pctymle + v $
+$\gamma_1$ should be negative, and $\beta_2$ should be negative so OMVB=\beta_2\gamma_1>0, and $\beta_1$ is positive Therefore, the OLS coefficient of $pctymle$ will be scaled away to be more positive, gaining statistical significance.
+
+
+### Suggested Statistical Test:
+1. Heavier penalties and arrest rate for minor crimes: the analysis suggest that less severe crimes consist of the most crimes commited, and the arrest rate is low for this type of crime. One good test in this regard is to lift the penalties and arrest rate for minor crimes for about 2 weeks, and see if the overall crime rate over those two weeks go down.
+
+
+
+
+
+
+
+

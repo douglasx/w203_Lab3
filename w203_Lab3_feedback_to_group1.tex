@@ -1,0 +1,142 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={w203\_Lab3\_feedback\_to\_Group1},
+            pdfauthor={Joanna Wang, Douglas Xu},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{w203\_Lab3\_feedback\_to\_Group1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Joanna Wang, Douglas Xu}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{November 27, 2018}
+
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Introduction \tab the introduction is very clear with background
+  information + research question + identified parameters. However,
+  maybe the research question should be asked in a more open format? So
+  that you leave enough room for other parameters that you may find
+  strongly correlated in the analysis
+\item
+  The initial data loading and cleaning: \tab the data cleaning is very
+  well executed on the variables of key interest. Also, anomalies are
+  identified, but you are being very careful about removing anything
+  that you do not believe is error. \tab one thing that might be worth
+  thinking about is that, should identifying key variables come before
+  data cleaning or after. It might make more logical sense to make
+  decision on the key explanatory variables after cleaning the dataset
+  initially
+\item
+  Model building process: \tab very good univariate analysis on each
+  explanatory variable and outcome variable. \tab \textbf{a few
+  suggestions}: \tab - in the EDA, analyze several more variables \tab -
+  more explanation on why are those explanatory variables chosen over
+  the rest of dataset \tab - use potential transformations to variables
+  that are not close to normal distribution
+\item
+  Regression model: \tab nice detailed reporting on model coefficients,
+  and plotting of standard errors \tab \textbf{a few suggestions}:
+  \tab - more detailed discussion of the coefficients from each model,
+  and what conclusions can be drawn from the model \tab - more
+  discussion on how the coefficients are complying with the 6 CLM
+  assumptions \tab - more detailed discussion between each model,
+  especially in how the third model helps in verifying the validity of
+  previous two models \tab - compare the model coefficient in a table
+\item
+  Omitted Variable Discussion: \tab according to the question and answer
+  in piazza, omitted variable seems to be variable that is outside of
+  the dataset. Therefore, there should be some discussion on some
+  important variable that are important for the model, but not present
+  in the dataset
+\end{enumerate}
+
+\subsubsection{Several small things}\label{several-small-things}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  the units in \(avgsen\) is actually days
+\end{enumerate}
+
+
+\end{document}

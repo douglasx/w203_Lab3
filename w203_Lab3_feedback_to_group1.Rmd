@@ -1,0 +1,41 @@
+---
+title: "w203_Lab3_feedback_to_Group1"
+author: "Joanna Wang, Douglas Xu"
+date: "November 27, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+1. Introduction
+\tab the introduction is very clear with background information + research question + identified parameters. However, maybe the research question should be asked in a more open format? So that you leave enough room for other parameters that you may find strongly correlated in the analysis
+
+2. The initial data loading and cleaning:
+\tab the data cleaning is very well executed on the variables of key interest. Also, anomalies are identified, but you are being very careful about removing anything that you do not believe is error. <br>
+\tab one thing that might be worth thinking about is that, should identifying key variables come before data cleaning or after. It might make more logical sense to make decision on the key explanatory variables after cleaning the dataset initially
+
+3. Model building process:
+\tab very good univariate analysis on each explanatory variable and outcome variable.
+\tab __a few suggestions__:
+\tab - in the EDA, analyze several more variables 
+\tab - more explanation on why are those explanatory variables chosen over the rest of dataset
+\tab - use potential transformations to variables that are not close to normal distribution
+
+4. Regression model:
+\tab nice detailed reporting on model coefficients, and plotting of standard errors
+\tab __a few suggestions__:
+\tab - more detailed discussion of the coefficients from each model, and what conclusions can be drawn from the model
+\tab - more discussion on how the coefficients are complying with the 6 CLM assumptions
+\tab - more detailed discussion between each model, especially in how the third model helps in verifying the validity of previous two models
+\tab - compare the model coefficient in a table
+
+5. Omitted Variable Discussion:
+\tab according to the question and answer in piazza, omitted variable seems to be variable that is outside of the dataset. Therefore, there should be some discussion on some important variable that are important for the model, but not present in the dataset
+
+
+
+
+
+### Several small things
+1. the units in $avgsen$ is actually days
+
