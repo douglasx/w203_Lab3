@@ -158,6 +158,7 @@ crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen 
 ```{r }
 model1 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris, data=data_clean)
 model1
+plot(model1)
 ```
 
 ### Fitting model 2
@@ -208,7 +209,7 @@ library(stargazer)
 Here is the latex table in a PDF document:
 
 ```{r mylatextable, results = "asis"}
-stargazer(model1,model2,model3, type = 'html')
+stargazer(model1,model2,model3, type = 'text')
 
 ```
 

@@ -132,14 +132,16 @@ $(document).ready(function () {
 <ol style="list-style-type: decimal">
 <li><p>Introduction the introduction is very clear with background information + research question + identified parameters. However, maybe the research question should be asked in a more open format? So that you leave enough room for other parameters that you may find strongly correlated in the analysis</p></li>
 <li><p>The initial data loading and cleaning: the data cleaning is very well executed on the variables of key interest. Also, anomalies are identified, but you are being very careful about removing anything that you do not believe is error. <br> one thing that might be worth thinking about is that, should identifying key variables come before data cleaning or after. It might make more logical sense to make decision on the key explanatory variables after cleaning the dataset initially</p></li>
-<li><p>Model building process: very good univariate analysis on each explanatory variable and outcome variable. <strong>a few suggestions</strong>: - in the EDA, analyze several more variables - more explanation on why are those explanatory variables chosen over the rest of dataset - use potential transformations to variables that are not close to normal distribution</p></li>
-<li><p>Regression model: nice detailed reporting on model coefficients, and plotting of standard errors <strong>a few suggestions</strong>: - more detailed discussion of the coefficients from each model, and what conclusions can be drawn from the model - more discussion on how the coefficients are complying with the 6 CLM assumptions - more detailed discussion between each model, especially in how the third model helps in verifying the validity of previous two models - compare the model coefficient in a table</p></li>
+<li><p>Model building process: very good univariate analysis on each explanatory variable and outcome variable. <strong>a few suggestions</strong>:<br> - in the EDA, analyze several more variables <br> - more explanation on why are those explanatory variables chosen over the rest of dataset<br> - use potential transformations to variables that are not close to normal distribution<br></p></li>
+<li><p>Regression model: nice detailed reporting on model coefficients, and plotting of standard errors <strong>a few suggestions</strong>: - more detailed discussion of the coefficients from each model, and what conclusions can be drawn from the model <br> - more discussion on how the coefficients are complying with the 6 CLM assumptions<br> - more detailed discussion between each model, especially in how the third model helps in verifying the validity of previous two models<br> - compare the model coefficient in a table<br></p></li>
 <li><p>Omitted Variable Discussion: according to the question and answer in piazza, omitted variable seems to be variable that is outside of the dataset. Therefore, there should be some discussion on some important variable that are important for the model, but not present in the dataset</p></li>
 </ol>
 <div id="several-small-things" class="section level3">
 <h3>Several small things</h3>
 <ol style="list-style-type: decimal">
 <li>the units in <span class="math inline">\(avgsen\)</span> is actually days</li>
+<li>maybe add a few more comments after each graph to show how it helps you in analyzing the data and the model</li>
+<li>have a comparison table between the three different models</li>
 </ol>
 </div>
 

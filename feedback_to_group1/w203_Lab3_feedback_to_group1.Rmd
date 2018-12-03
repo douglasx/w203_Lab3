@@ -16,26 +16,27 @@ output:
 
 3. Model building process:
 \tab very good univariate analysis on each explanatory variable and outcome variable.
-\tab __a few suggestions__:
-\tab - in the EDA, analyze several more variables 
-\tab - more explanation on why are those explanatory variables chosen over the rest of dataset
-\tab - use potential transformations to variables that are not close to normal distribution
+\tab __a few suggestions__:<br>
+\tab - in the EDA, analyze several more variables <br>
+\tab - more explanation on why are those explanatory variables chosen over the rest of dataset<br>
+\tab - use potential transformations to variables that are not close to normal distribution<br>
 
 4. Regression model:
 \tab nice detailed reporting on model coefficients, and plotting of standard errors
 \tab __a few suggestions__:
-\tab - more detailed discussion of the coefficients from each model, and what conclusions can be drawn from the model
-\tab - more discussion on how the coefficients are complying with the 6 CLM assumptions
-\tab - more detailed discussion between each model, especially in how the third model helps in verifying the validity of previous two models
-\tab - compare the model coefficient in a table
+\tab - more detailed discussion of the coefficients from each model, and what conclusions can be drawn from the model <br>
+\tab - more discussion on how the coefficients are complying with the 6 CLM assumptions<br>
+\tab - more detailed discussion between each model, especially in how the third model helps in verifying the validity of previous two models<br>
+\tab - compare the model coefficient in a table<br>
+
 
 5. Omitted Variable Discussion:
 \tab according to the question and answer in piazza, omitted variable seems to be variable that is outside of the dataset. Therefore, there should be some discussion on some important variable that are important for the model, but not present in the dataset
 
 
 
-
-
 ### Several small things
 1. the units in $avgsen$ is actually days
+2. maybe add a few more comments after each graph to show how it helps you in analyzing the data and the model
+3. have a comparison table between the three different models
 
