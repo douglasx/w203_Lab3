@@ -13,6 +13,8 @@ This part is to look at the dataset in general to grow our understand of the dat
 
 ```{r }
 library(car)
+library(sandwich)
+library(lmtest)
 data <- read.csv(file="crime_v2.csv", header=TRUE, sep=",",na.strings=c("`","","NA"))
 objects(data)
 ```
@@ -20,6 +22,7 @@ Here we have the summary of all the veriables in the data set, to spot any anorm
 ```{r}
 summary(data)
 ```
+
 We noticed that there are 6 NAs in all the variables. To took a closer look at the last few rows of the date set to verify the NA entires.  
 ```{r}
 tail(data,11)
@@ -53,16 +56,19 @@ objects(data_clean)
 data_clean <- subset(data_clean,data_clean$prbarr <1)
 hist(data_clean$prbarr, breaks=20,  main="prbarr", xlab="prbarr")
 ```
+
 4. "prbconv" column contains strange characters and blank spaces; Also becuase this is the probability, it should not contain entries that are bigger than 1 <br>
 __blank space and strange characters are taken care of in data import__
 ```{r }
 data_clean <- subset(data_clean,data_clean$prbconv <1)
 hist(data_clean$prbconv, breaks=20, main="prbconv", xlab="prbconv")
 ```
+
 5. taxpc: There seems to be some anomaly that is very far apart from other data points, but we have no evidence to say whether the data has anomaly or not. It could be an error or it could just be that the county has high tax per capita
 ```{r }
 hist(data_clean$taxpc, breaks=20, main="taxpc", xlab="taxpc")
 ```
+
 6. over-paid service industry: we found that the maximum value of the avg. weekly wage of service industry is above 2000, which is way more than the other industries. Based on the background knowledge, we don't believe there should be significant difference between the service industry and other industries in terms of compensation difference, and the data point above 2000 should be an error in the data, and we decided to remove them
 
 ```{r }
@@ -76,9 +82,11 @@ summary(data_clean$wser)
 ```{r }
 hist(data_clean$crmrte,breaks=50, main="crmrte", xlab="crmrte")
 ```
+
 ```{r }
 hist(log(data_clean$crmrte),breaks=50, main="Log transform of crmrte", xlab="Log of crmrte")
 ```
+
 2. As the second part of the EDA, we take an initial look at the simple correlation between each variable inside the dataframe to help us understand the general correlations betwen each varible and the dependent variable to help identify the explanatory variables of interest
 ```{r }
 # correlation plot
@@ -103,6 +111,7 @@ data_clean$crmrte_log <- log(data_clean$crmrte)
 hist(data_clean$crmrte_log, breaks=50, main="log transformation of 
 crime rate per capita")
 ```
+
 Looking at the other variables, and the simple correlation plot in initial EDA, we are proposing the explanatory variables that we believe contribute to crime rate: <br>
 
 1. prbarr: the probability of arrest should be a direct contributing factor to crime rate. In other words, if people who have potential to commit a crime believe the chance of them getting arrested is small, then it might encourage them to commit a crime
@@ -116,19 +125,23 @@ With the above being proposed, we decided to take a look at the distribution of 
 # prbarr
 hist(data_clean$prbarr,breaks=50,main="prbarr", xlab="prbarr")
 ```
+
 ```{r }
 #prbconv
 hist(data_clean$prbconv,breaks=50,main="prbconv", xlab="prbconv")
 ```
+
 ```{r }
 #prbpris
 hist(data_clean$prbpris,breaks=50,main="prbpris", xlab="prbpris")
 ```
+
 ```{r }
 #avgsen
 hist(data_clean$avgsen,breaks=50,main="avgsen", xlab="avgsen")
 
 ```
+
 The above histograms of each explanatory variable all seem rather normally distributed, with some anomalies implied in $prbarr$ and $avgsen$. However, we don't think there is enough evidence to make a decision on whether the data is anomaly or not, and we will use the data for model building.
 
 
@@ -146,10 +159,6 @@ scatterplot(data_clean$prbpris,data_clean$crmrte_log, main="prbpris vs. crmrte_l
 ```{r }
 scatterplot(data_clean$avgsen,data_clean$crmrte_log, main="avgsen vs. crmrte_log", xlab="avgsen", ylab="crmrte_log")
 ```
-From the above scatterplots, we believe that the explanatory variables are displaying relatively linear relationship with dependent variable except for $prbpris$, which seems to be more in parabolic shape. Therefore, we have decided to create a new variable with square of probability of prison to better reveal the linearity.
-```{r }
-data_clean$prbpris_sq <- data_clean$prbpris^2
-```
 
 _Fitting model 1__:<br>
 With the above explained reason, we are building the model1 with the explanatory variable of key interest as below:<br>
@@ -158,37 +167,196 @@ crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen 
 ```{r }
 model1 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris, data=data_clean)
 model1
-plot(model1)
+
 ```
+Now let's look at whether the model coefficients satisfy the 6 CLM assumptions:
+
+1. linear population model:<br>
+\tab we have not defined the error term, therefore we don't have to talk about the linear population model yet.
+
+2. Random sampling:<br>
+\tab we do not know how the data is collected. But based on the source of the data, the probability of arrest, conviction and sentence should be random-sampled since they all come from credible sources that only collect data from actual events Therefore, we should be confident enough to say that the datset have randome sampling.
+
+3. No perfect collinearity<br>
+\tab We are relying on R to alert us when this happens
+
+4. Zero-condition mean <br>
+\tab Based on the chart below, it definitely deviates from zero-condition mean. It seems to be rather following a parabolic shape.<br>
+\tab We believe it can be caused by both the face that:
+\tab a. there are omitted variables 
+\tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
+```{r}
+plot(model1,which = 1)
+```
+
+5. Homoskedasticity <br>
+\tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
+
+```{r}
+plot(model1,which = 3)
+
+```
+
+6. Normality of Errors <br>
+\tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
+
+```{r}
+plot(model1,which =2)
+```
+
+Next, we are doing a t-test for the coefficients to see whether they have statistical significance
+
+```{r}
+coeftest(model1,vcov=vcovHC)
+```
+
+Now we want to test whether the two explanatory variables that are not statistically significant are jointly significant, we build a model1.1 with just $prbarr$ and $prbconv$
+```{r}
+model1.1 <- lm(crmrte_log ~ prbarr + prbconv, data=data_clean)
+```
+To test whether the difference in fit is significant, we use the wald test, which generalizes the usual F-test of overall significance, but allows for a heteroskedasticity-robust covariance matrix
+```{r}
+waldtest(model1, model1.1, vcov = vcovHC)
+```
+
+The above results suggest that the variable $avgsen$ and $prbpris$ are not even jointly significant.
+
+
+__Summary for model 1__ <br>
+1. There are strong evidence that omitted variables exist for model1, and it leading to biases.
+2. We need to use robust standard errors
+3. Only $prbarr$ and $prbconv$ are statistically significant
+4. $avgsen$ and $prbpris$ are not even jointly significant, therefore, we might need to consider removing those two variabls in our model
+
 
 ### Fitting model 2
 Based on the analysis from research question section, we do believe that the variable $mix$ has certain influence on crime rate, especially in $prbarr$. The fact that $prbarr$ has strong correlation with $mix$ lead us to think that we should really be focusing on the portion of crime that is non face-to-face, which has relatively low $prbarr$. Therefore, we are adding an extra column that reflects percentage of non face-to-face crime: <br>
 
 ```{r}
-data_clean$nonFtF <- 1-data_clean$mix
-scatterplot(data_clean$nonFtF,data_clean$crmrte_log, main="non-Ftf vs. crmrte_log", xlab="nonFtF", ylab="crmrte_log")
-```
-```{r }
-scatterplot(data_clean$nonFtF,data_clean$prbarr, main="non-Ftf vs. prbarr", xlab="nonFtF", ylab="prbarr")
+hist(data_clean$mix,breaks=50,main="mix", xlab="mix")
+
 ```
 
-1. mix: The above two scatterplot show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
+The above histogram does not seem very normally distributed. Since it is left skewed, we believe that log transformation is helpful:
+```{r}
+hist(log(data_clean$mix),breaks=50,main="log transformed mix", xlab="log transformed mix")
+```
+
+We will create a new variable that has the log transformed $mix$, and name it $mix_log$.
+
+```{r}
+data_clean$mix_log <- log(data_clean$mix)
+scatterplot(data_clean$mix_log,data_clean$crmrte_log, main="mix_log vs. crmrte_log", xlab="mix_log", ylab="crmrte_log")
+```
+
+1. mix: The above two scatterplots show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
 
 2. polpc: the magnitude of the $polpc$ is at least 100 times smaller than the other probability variables, and we believe that it might add some imbalance in our model building process, therefore we decided to create another variable that is 100 times of polpc:
 ```{r }
 data_clean$polpcMult <- data_clean$polpc*100
+hist(data_clean$polpcMult,breaks=50,main="polpcMult", xlab="polpcMult")
 ```
-_Fitting model 2__:<br>
-With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. For the purpose of building the model, we added two additional variables: $nonFtF$ and $polpcMult$. $nonFtf$ is the transformation of mix. It represent the non face to face offense. And $polpcMult$ is the transformation of polpc. We need to multiply polpc by 100 becuase the numbers are too small. Without the multiplication, polpc skewed the model significantly. After the data transformation, the model is as below: <br>
-crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * nonFtf + \beta_6 * taxpc + \beta_7 * urban + \beta_8 * pctymle + \beta_9 * polpcMutl + u $ 
+
+3. taxpc: 
+```{r }
+hist(data_clean$taxpc,breaks=50,main="taxpc", xlab="taxpc")
+```
 
 ```{r }
-data_clean$nonFtf <- (1- data_clean$mix)
-data_clean$polpcMult <- data_clean$polpc * 100
-model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris_sq + nonFtf + taxpc + urban + pctymle + polpcMult, data=data_clean)
+hist(log(data_clean$taxpc),breaks=50,main="log transformed taxpc", xlab="log transformed taxpc")
+```
+
+The log transformed taxpc seems to be more normal compared to the original dataset. We will create a new variable with log transformed $taxpc$, and name it $taxpc_log$.
+```{r}
+data_clean$taxpc_log <- log(data_clean$taxpc)
+```
+
+4. urban: we will use $urban$ as indicator variable to see how we compare the data between areas outside the city and within the city
+
+5. pctymle: According to the distribution below, there seems to be one point that has much higher percentage of young males. However, we don't have enough evidence to see whether it is an error in the data or an outlier.
+```{r}
+hist(data_clean$pctymle, breaks=50, main="pctymle", xlab="pctymle")
+```
+```{r}
+hist(log(data_clean$pctymle), breaks=50, main="pctymle", xlab="pctymle")
+```
+
+With the above comparison, we will use the log transformed version of the data, and create a new variable $pctymle_log$
+```{r}
+data_clean$pctymle_log <- log(data_clean$pctymle)
+```
+
+
+_Fitting model 2__:<br>
+With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. After the data transformation, the model is as below: <br>
+crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * mix_log + \beta_6 * taxpc_log + \beta_7 * urban + \beta_8 * pctymle_log + \beta_9 * polpcMult + u $ 
+
+```{r }
+model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + mix_log + taxpc_log + pctymle_log + polpcMult, data=data_clean)
+#model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + mix + taxpc + pctymle + polpcMult, data=data_clean)
+
 model2
 ```
-Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant  
+Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant.
+
+We will look again at the residuals and standard errors of the new model, and how is the model fitting satisfy the CLM assumptions.
+1. linear population model:<br>
+\tab we have not defined the error term, therefore we don't have to talk about the linear population model yet.
+
+2. Random sampling:<br>
+\tab we do not know how the data is collected. But based on the source of the data, the probability of arrest, conviction and sentence should be random-sampled since they all come from credible sources that only collect data from actual events Therefore, we should be confident enough to say that the datset have randome sampling.
+
+3. No perfect collinearity<br>
+\tab We are relying on R to alert us when this happens
+
+4. Zero-condition mean <br>
+\tab Based on the chart below, it definitely improves compared to model1, but still deviates from zero-condition mean. <br>
+\tab Similarly, We believe it can be caused by both the face that:
+\tab a. there are omitted variables 
+\tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
+```{r}
+plot(model2,which = 1)
+```
+
+5. Homoskedasticity <br>
+\tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
+
+```{r}
+plot(model2,which = 3)
+
+```
+
+6. Normality of Errors <br>
+\tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
+
+```{r}
+plot(model2,which =2)
+```
+
+Next, we are doing a t-test for the coefficients to see whether they have statistical significance
+
+```{r}
+coeftest(model2,vcov=vcovHC)
+```
+
+Now we want to test whether the two explanatory variables that are not statistically significant are jointly significant, we build a model1.1 with just $prbarr$ and $prbconv$
+```{r}
+model1.1 <- lm(crmrte_log ~ prbarr + prbconv, data=data_clean)
+```
+To test whether the difference in fit is significant, we use the wald test, which generalizes the usual F-test of overall significance, but allows for a heteroskedasticity-robust covariance matrix
+```{r}
+waldtest(model1, model1.1, vcov = vcovHC)
+```
+
+The above results suggest that the variable $avgsen$ and $prbpris$ are not even jointly significant.
+
+
+__Summary for model 1__ <br>
+1. There are strong evidence that omitted variables exist for model1, and it leading to biases.
+2. We need to use robust standard errors
+3. Only $prbarr$ and $prbconv$ are statistically significant
+4. $avgsen$ and $prbpris$ are not even jointly significant, therefore, we might need to consider removing those two variabls in our model
+
 
 ### Fitting model 3
 Bringing in other covariates that we do not believe to be too relavent:
