@@ -1,0 +1,648 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={w203\_Lab3\_group5\_draft1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{w203\_Lab3\_group5\_draft1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\subsubsection{Part1: Looking at the
+data}\label{part1-looking-at-the-data}
+
+This part is to look at the dataset in general to grow our understand of
+the data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\DataTypeTok{file=}\StringTok{"crime_v2.csv"}\NormalTok{, }\DataTypeTok{header=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sep=}\StringTok{","}\NormalTok{,}\DataTypeTok{na.strings=}\KeywordTok{c}\NormalTok{(}\StringTok{"`"}\NormalTok{,}\StringTok{""}\NormalTok{,}\StringTok{"NA"}\NormalTok{))}
+\KeywordTok{objects}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "avgsen"   "central"  "county"   "crmrte"   "density"  "mix"     
+##  [7] "pctmin80" "pctymle"  "polpc"    "prbarr"   "prbconv"  "prbpris" 
+## [13] "taxpc"    "urban"    "wcon"     "west"     "wfed"     "wfir"    
+## [19] "wloc"     "wmfg"     "wser"     "wsta"     "wtrd"     "wtuc"    
+## [25] "year"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      county           year        crmrte             prbarr       
+##  Min.   :  1.0   Min.   :87   Min.   :0.005533   Min.   :0.09277  
+##  1st Qu.: 52.0   1st Qu.:87   1st Qu.:0.020927   1st Qu.:0.20568  
+##  Median :105.0   Median :87   Median :0.029986   Median :0.27095  
+##  Mean   :101.6   Mean   :87   Mean   :0.033400   Mean   :0.29492  
+##  3rd Qu.:152.0   3rd Qu.:87   3rd Qu.:0.039642   3rd Qu.:0.34438  
+##  Max.   :197.0   Max.   :87   Max.   :0.098966   Max.   :1.09091  
+##  NA's   :6       NA's   :6    NA's   :6          NA's   :6        
+##     prbconv           prbpris           avgsen           polpc         
+##  Min.   :0.06838   Min.   :0.1500   Min.   : 5.380   Min.   :0.000746  
+##  1st Qu.:0.34541   1st Qu.:0.3648   1st Qu.: 7.340   1st Qu.:0.001231  
+##  Median :0.45283   Median :0.4234   Median : 9.100   Median :0.001485  
+##  Mean   :0.55128   Mean   :0.4108   Mean   : 9.647   Mean   :0.001702  
+##  3rd Qu.:0.58886   3rd Qu.:0.4568   3rd Qu.:11.420   3rd Qu.:0.001877  
+##  Max.   :2.12121   Max.   :0.6000   Max.   :20.700   Max.   :0.009054  
+##  NA's   :6         NA's   :6        NA's   :6        NA's   :6         
+##     density            taxpc             west           central      
+##  Min.   :0.00002   Min.   : 25.69   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.54741   1st Qu.: 30.66   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :0.96226   Median : 34.87   Median :0.0000   Median :0.0000  
+##  Mean   :1.42884   Mean   : 38.06   Mean   :0.2527   Mean   :0.3736  
+##  3rd Qu.:1.56824   3rd Qu.: 40.95   3rd Qu.:0.5000   3rd Qu.:1.0000  
+##  Max.   :8.82765   Max.   :119.76   Max.   :1.0000   Max.   :1.0000  
+##  NA's   :6         NA's   :6        NA's   :6        NA's   :6       
+##      urban            pctmin80           wcon            wtuc      
+##  Min.   :0.00000   Min.   : 1.284   Min.   :193.6   Min.   :187.6  
+##  1st Qu.:0.00000   1st Qu.: 9.845   1st Qu.:250.8   1st Qu.:374.6  
+##  Median :0.00000   Median :24.312   Median :281.4   Median :406.5  
+##  Mean   :0.08791   Mean   :25.495   Mean   :285.4   Mean   :411.7  
+##  3rd Qu.:0.00000   3rd Qu.:38.142   3rd Qu.:314.8   3rd Qu.:443.4  
+##  Max.   :1.00000   Max.   :64.348   Max.   :436.8   Max.   :613.2  
+##  NA's   :6         NA's   :6        NA's   :6       NA's   :6      
+##       wtrd            wfir            wser             wmfg      
+##  Min.   :154.2   Min.   :170.9   Min.   : 133.0   Min.   :157.4  
+##  1st Qu.:190.9   1st Qu.:286.5   1st Qu.: 229.7   1st Qu.:288.9  
+##  Median :203.0   Median :317.3   Median : 253.2   Median :320.2  
+##  Mean   :211.6   Mean   :322.1   Mean   : 275.6   Mean   :335.6  
+##  3rd Qu.:225.1   3rd Qu.:345.4   3rd Qu.: 280.5   3rd Qu.:359.6  
+##  Max.   :354.7   Max.   :509.5   Max.   :2177.1   Max.   :646.9  
+##  NA's   :6       NA's   :6       NA's   :6        NA's   :6      
+##       wfed            wsta            wloc            mix         
+##  Min.   :326.1   Min.   :258.3   Min.   :239.2   Min.   :0.01961  
+##  1st Qu.:400.2   1st Qu.:329.3   1st Qu.:297.3   1st Qu.:0.08074  
+##  Median :449.8   Median :357.7   Median :308.1   Median :0.10186  
+##  Mean   :442.9   Mean   :357.5   Mean   :312.7   Mean   :0.12884  
+##  3rd Qu.:478.0   3rd Qu.:382.6   3rd Qu.:329.2   3rd Qu.:0.15175  
+##  Max.   :598.0   Max.   :499.6   Max.   :388.1   Max.   :0.46512  
+##  NA's   :6       NA's   :6       NA's   :6       NA's   :6        
+##     pctymle       
+##  Min.   :0.06216  
+##  1st Qu.:0.07443  
+##  Median :0.07771  
+##  Mean   :0.08396  
+##  3rd Qu.:0.08350  
+##  Max.   :0.24871  
+##  NA's   :6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(data,}\DecValTok{11}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    county year    crmrte   prbarr  prbconv  prbpris avgsen      polpc
+## 87    191   87 0.0458895 0.172257 0.450000 0.421053   9.59 0.00122733
+## 88    193   87 0.0235277 0.266055 0.588859 0.423423   5.86 0.00117887
+## 89    193   87 0.0235277 0.266055 0.588859 0.423423   5.86 0.00117887
+## 90    195   87 0.0313973 0.201397 1.670520 0.470588  13.02 0.00445923
+## 91    197   87 0.0141928 0.207595 1.182930 0.360825  12.23 0.00118573
+## 92     NA   NA        NA       NA       NA       NA     NA         NA
+## 93     NA   NA        NA       NA       NA       NA     NA         NA
+## 94     NA   NA        NA       NA       NA       NA     NA         NA
+## 95     NA   NA        NA       NA       NA       NA     NA         NA
+## 96     NA   NA        NA       NA       NA       NA     NA         NA
+## 97     NA   NA        NA       NA       NA       NA     NA         NA
+##      density    taxpc west central urban pctmin80     wcon     wtuc
+## 87 1.7725632 32.74533    0       0     0 34.42830 318.0599 400.8570
+## 88 0.8138298 28.51783    1       0     0  5.93109 285.8289 480.1948
+## 89 0.8138298 28.51783    1       0     0  5.93109 285.8289 480.1948
+## 90 1.7459893 53.66693    0       0     0 37.43110 315.1641 377.9356
+## 91 0.8898810 25.95258    1       0     0  5.46081 314.1660 341.8803
+## 92        NA       NA   NA      NA    NA       NA       NA       NA
+## 93        NA       NA   NA      NA    NA       NA       NA       NA
+## 94        NA       NA   NA      NA    NA       NA       NA       NA
+## 95        NA       NA   NA      NA    NA       NA       NA       NA
+## 96        NA       NA   NA      NA    NA       NA       NA       NA
+## 97        NA       NA   NA      NA    NA       NA       NA       NA
+##        wtrd     wfir     wser   wmfg   wfed   wsta   wloc        mix
+## 87 230.9888 320.0345 238.4958 295.26 334.55 375.45 327.62 0.08616445
+## 88 268.3836 365.0196 295.9352 295.63 468.26 337.88 348.74 0.11050157
+## 89 268.3836 365.0196 295.9352 295.63 468.26 337.88 348.74 0.11050157
+## 90 246.0614 411.4330 296.8684 392.27 480.79 303.11 337.28 0.15612382
+## 91 182.8020 348.1432 212.8205 322.92 391.72 385.65 306.85 0.06756757
+## 92       NA       NA       NA     NA     NA     NA     NA         NA
+## 93       NA       NA       NA     NA     NA     NA     NA         NA
+## 94       NA       NA       NA     NA     NA     NA     NA         NA
+## 95       NA       NA       NA     NA     NA     NA     NA         NA
+## 96       NA       NA       NA     NA     NA     NA     NA         NA
+## 97       NA       NA       NA     NA     NA     NA     NA         NA
+##       pctymle
+## 87 0.08828809
+## 88 0.07819394
+## 89 0.07819394
+## 90 0.07945071
+## 91 0.07419893
+## 92         NA
+## 93         NA
+## 94         NA
+## 95         NA
+## 96         NA
+## 97         NA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(data}\OperatorTok{$}\NormalTok{prbconv, }\DataTypeTok{breaks=}\DecValTok{20}\NormalTok{, }\DataTypeTok{main=}\StringTok{"prbconv"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbconv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Some of the things we see in the dataset: 1. 6 NA 2. take out year
+column 3. ``prbarr'' max \textgreater{} 1 4. ``prbconv'' strange
+characters and blank spaces; also the probability is bigger than 1 5.
+taxpc, what is the unit, what does it mean? Outlier at 119. Is the unit
+\%? 6. pctmin80 data is too old 7. 15-23: different industry avg. wages
+8. 24 mix: ratio of face-to-face crime 9. percentage young male (what is
+the age:15-24)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(data}\OperatorTok{$}\NormalTok{prbconv, }\DataTypeTok{breaks=}\DecValTok{20}\NormalTok{, }\DataTypeTok{main=}\StringTok{"prbconv"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbconv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-5-1.pdf}
+With the import method modified, we are able to address the missing
+values and the special character error in the \(prbconv\) data column
+
+\subsubsection{Data Cleaning}\label{data-cleaning}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  remove NA
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(data)}
+\KeywordTok{summary}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      county           year        crmrte             prbarr       
+##  Min.   :  1.0   Min.   :87   Min.   :0.005533   Min.   :0.09277  
+##  1st Qu.: 52.0   1st Qu.:87   1st Qu.:0.020927   1st Qu.:0.20568  
+##  Median :105.0   Median :87   Median :0.029986   Median :0.27095  
+##  Mean   :101.6   Mean   :87   Mean   :0.033400   Mean   :0.29492  
+##  3rd Qu.:152.0   3rd Qu.:87   3rd Qu.:0.039642   3rd Qu.:0.34438  
+##  Max.   :197.0   Max.   :87   Max.   :0.098966   Max.   :1.09091  
+##     prbconv           prbpris           avgsen           polpc          
+##  Min.   :0.06838   Min.   :0.1500   Min.   : 5.380   Min.   :0.0007459  
+##  1st Qu.:0.34541   1st Qu.:0.3648   1st Qu.: 7.340   1st Qu.:0.0012308  
+##  Median :0.45283   Median :0.4234   Median : 9.100   Median :0.0014853  
+##  Mean   :0.55128   Mean   :0.4108   Mean   : 9.647   Mean   :0.0017022  
+##  3rd Qu.:0.58886   3rd Qu.:0.4568   3rd Qu.:11.420   3rd Qu.:0.0018768  
+##  Max.   :2.12121   Max.   :0.6000   Max.   :20.700   Max.   :0.0090543  
+##     density            taxpc             west           central      
+##  Min.   :0.00002   Min.   : 25.69   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.54741   1st Qu.: 30.66   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :0.96226   Median : 34.87   Median :0.0000   Median :0.0000  
+##  Mean   :1.42884   Mean   : 38.06   Mean   :0.2527   Mean   :0.3736  
+##  3rd Qu.:1.56824   3rd Qu.: 40.95   3rd Qu.:0.5000   3rd Qu.:1.0000  
+##  Max.   :8.82765   Max.   :119.76   Max.   :1.0000   Max.   :1.0000  
+##      urban            pctmin80           wcon            wtuc      
+##  Min.   :0.00000   Min.   : 1.284   Min.   :193.6   Min.   :187.6  
+##  1st Qu.:0.00000   1st Qu.: 9.845   1st Qu.:250.8   1st Qu.:374.6  
+##  Median :0.00000   Median :24.312   Median :281.4   Median :406.5  
+##  Mean   :0.08791   Mean   :25.495   Mean   :285.4   Mean   :411.7  
+##  3rd Qu.:0.00000   3rd Qu.:38.142   3rd Qu.:314.8   3rd Qu.:443.4  
+##  Max.   :1.00000   Max.   :64.348   Max.   :436.8   Max.   :613.2  
+##       wtrd            wfir            wser             wmfg      
+##  Min.   :154.2   Min.   :170.9   Min.   : 133.0   Min.   :157.4  
+##  1st Qu.:190.9   1st Qu.:286.5   1st Qu.: 229.7   1st Qu.:288.9  
+##  Median :203.0   Median :317.3   Median : 253.2   Median :320.2  
+##  Mean   :211.6   Mean   :322.1   Mean   : 275.6   Mean   :335.6  
+##  3rd Qu.:225.1   3rd Qu.:345.4   3rd Qu.: 280.5   3rd Qu.:359.6  
+##  Max.   :354.7   Max.   :509.5   Max.   :2177.1   Max.   :646.9  
+##       wfed            wsta            wloc            mix         
+##  Min.   :326.1   Min.   :258.3   Min.   :239.2   Min.   :0.01961  
+##  1st Qu.:400.2   1st Qu.:329.3   1st Qu.:297.3   1st Qu.:0.08073  
+##  Median :449.8   Median :357.7   Median :308.1   Median :0.10186  
+##  Mean   :442.9   Mean   :357.5   Mean   :312.7   Mean   :0.12884  
+##  3rd Qu.:478.0   3rd Qu.:382.6   3rd Qu.:329.2   3rd Qu.:0.15175  
+##  Max.   :598.0   Max.   :499.6   Max.   :388.1   Max.   :0.46512  
+##     pctymle       
+##  Min.   :0.06216  
+##  1st Qu.:0.07443  
+##  Median :0.07771  
+##  Mean   :0.08396  
+##  3rd Qu.:0.08350  
+##  Max.   :0.24871
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  take out year column as it does not mean anything in our analysis
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_clean <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(data,}\DataTypeTok{select=}\OperatorTok{-}\KeywordTok{c}\NormalTok{(year))}
+\KeywordTok{objects}\NormalTok{(data_clean)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "avgsen"   "central"  "county"   "crmrte"   "density"  "mix"     
+##  [7] "pctmin80" "pctymle"  "polpc"    "prbarr"   "prbconv"  "prbpris" 
+## [13] "taxpc"    "urban"    "wcon"     "west"     "wfed"     "wfir"    
+## [19] "wloc"     "wmfg"     "wser"     "wsta"     "wtrd"     "wtuc"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  ``prbarr'' max \textgreater{} 1
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_clean <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(data_clean,data_clean}\OperatorTok{$}\NormalTok{prbarr }\OperatorTok{<}\DecValTok{1}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{prbarr, }\DataTypeTok{breaks=}\DecValTok{20}\NormalTok{,  }\DataTypeTok{main=}\StringTok{"prbarr"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbarr"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-8-1.pdf}
+4. ``prbconv'' strange characters and blank spaces; also the probability
+is bigger than 1 \textbf{blank space and strange characters are taken
+care of in data import}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_clean <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(data_clean,data_clean}\OperatorTok{$}\NormalTok{prbconv }\OperatorTok{<}\DecValTok{1}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{prbconv, }\DataTypeTok{breaks=}\DecValTok{20}\NormalTok{, }\DataTypeTok{main=}\StringTok{"prbconv"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbconv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-9-1.pdf}
+5. taxpc: There seems to be some anomaly that is very far apart from
+other data points, but we have no evidence to say whether the data has
+anomaly or not. It could be an error or it could just be that the county
+has high tax per capita
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{taxpc, }\DataTypeTok{breaks=}\DecValTok{20}\NormalTok{, }\DataTypeTok{main=}\StringTok{"taxpc"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"taxpc"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-10-1.pdf}
+6. over-paid service industry: we found that the maximum value of the
+avg. weekly wage of service industry is above 2000, which is way more
+than the other industries. Based on the background knowledge, we don't
+believe there should be significant difference between the service
+industry and other industries in terms of compensation difference, and
+the data point above 2000 should be an error in the data, and we decided
+to remove them
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_clean <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(data_clean, data_clean}\OperatorTok{$}\NormalTok{wser}\OperatorTok{<}\DecValTok{1000}\NormalTok{)}
+\KeywordTok{summary}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{wser)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   133.0   230.3   253.6   255.2   278.1   391.3
+\end{verbatim}
+
+\subsubsection{EDA}\label{eda}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  As the first part of the data analysis, we are taking a look at the
+  distributions of the dependent variable:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{crmrte,}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{, }\DataTypeTok{main=}\StringTok{"crmrte"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"crmrte"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(}\KeywordTok{log}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{crmrte),}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Log transform of crmrte"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"Log of crmrte"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-13-1.pdf}
+2. As the second part of the EDA, we take an initial look at the simple
+correlation between each variable inside the dataframe to help us
+understand the general correlations betwen each varible and the
+dependent variable to help identify the explanatory variables of
+interest
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# correlation plot}
+\KeywordTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.84 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{corrplot}\NormalTok{(}\KeywordTok{cor}\NormalTok{(data_clean[,}\KeywordTok{sapply}\NormalTok{(data_clean,is.numeric)]),}\DataTypeTok{is.corr=}\NormalTok{T, }\DataTypeTok{method =} \StringTok{"circle"}\NormalTok{, }\DataTypeTok{type=}\StringTok{'upper'}\NormalTok{,}\DataTypeTok{main =} \StringTok{"Correlation Plot"}\NormalTok{, }\DataTypeTok{tl.cex=}\FloatTok{0.8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\subsubsection{Research Question}\label{research-question}
+
+After the initial data cleaning and data analysis, we have defined our
+research question to be: how to reduce crime rate within North Carolina,
+and especially how to reduce crime rate by increasing the arrest
+probability for non face-to-face crime
+
+The question is asked to help the political campaign to propose
+effective strategies to reduce crime rate, especially in the area that
+might have been neglected before. From the simple correlation plot, we
+found that variable \(mix\) has strong positive correlation with
+\(prbarr\). It can make sense because face-to-face crimes are more
+severe and usually have more police concentration and resources that
+lead to higher probability of arrest. However, it might not be very easy
+for non face-to-face crime, which is still the majority of crimes that
+happened, but actually seem to have pretty low arrest rate. This
+conclusion can be obtained by the fact that crime rate (\(crmrte\)) is
+negatively correlated with probability of arrest(\(prbarr\)) while
+percentage of face-to-face crime (\(mix\)) is positively correlated with
+probability of arrest (\(prbarr\)). Therefore, how to increase
+\(prbarr\) for non face-to-face crime is really the strategy we need to
+focus our energy on.
+
+\subsubsection{Fitting model 1}\label{fitting-model-1}
+
+\textbf{model 1}: crmrte = \$\beta\_0 + \beta\_1 * prbarr + \beta\_2 *
+prbconv + \beta\_3 * avgsen + \beta\_4 * prbpris + u \$
+
+Based on the understanding of what each parameter stands for, we have
+chosen crmrte as the only dependent variable to use for our analysis.
+The variable is a direct indicator of average crime commited to North
+Carolina counties. To start with, we took a look at the distribution of
+the dataset.
+
+From the analysis of the EDA, the distribution of crmrte does not look
+particularly normal, but the log transformed crmrte looks much more
+normally distributed. To reduce the standard error in the model building
+process, we decided that in our model fitting, we are going to use the
+log transformed \(crmrte\) as our dependent variable. That being said,
+we are creating another variable that indicates the log transformed
+\(crmrte\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_clean}\OperatorTok{$}\NormalTok{crmrte_log <-}\StringTok{ }\KeywordTok{log}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{crmrte)}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{crmrte_log, }\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{, }\DataTypeTok{main=}\StringTok{"log transformation of }
+\StringTok{crime rate per capita"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-15-1.pdf}
+Looking at the other variables, and the simple correlation plot in
+initial EDA, we are proposing the explanatory variables that we believe
+contribute to crime rate:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  prbarr: the probability of arrest should be a direct contributing
+  factor to crime rate. In other words, if people who have potential to
+  commit a crime believe the chance of them getting arrested is small,
+  then it might encourage them to commit a crime
+\item
+  prbconv: after getting arrested, getting suspects convicted are the
+  only way to let them take the punishment they deserve.
+\item
+  prbpris
+\item
+  avgsen: both probability of prison sentence reflect the severity of
+  the punishment, which should directly impact the crime rate
+\end{enumerate}
+
+With the above being proposed, we decided to take a look at the
+distribution of each explanatory variable:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# prbarr}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{prbarr,}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{,}\DataTypeTok{main=}\StringTok{"prbarr"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbarr"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#prbconv}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{prbconv,}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{,}\DataTypeTok{main=}\StringTok{"prbconv"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbconv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#prbpris}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{prbpris,}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{,}\DataTypeTok{main=}\StringTok{"prbpris"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"prbpris"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#avgsen}
+\KeywordTok{hist}\NormalTok{(data_clean}\OperatorTok{$}\NormalTok{avgsen,}\DataTypeTok{breaks=}\DecValTok{50}\NormalTok{,}\DataTypeTok{main=}\StringTok{"avgsen"}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{"avgsen"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{w203_Lab3_group5_draft1_files/figure-latex/unnamed-chunk-19-1.pdf}
+The above histograms of each explanatory variable all seem rather
+normally distributed, with some anomalies implied in \(prbarr\) and
+\(avgsen\). However, we don't think there is enough evidence to make a
+decision on whether the data is anomaly or not, and we will use the data
+for model building.
+
+\_Fitting model 1\_\_: With the above explained reason, we are building
+the model1 with the explanatory variable of key interest as below:
+crmrte\_log = \$\beta\_0 + \beta\_1 * prbarr + \beta\_2 * prbconv +
+\beta\_3 * avgsen + \beta\_4 * prbpris + u \$
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(crmrte_log }\OperatorTok{~}\StringTok{ }\NormalTok{prbarr }\OperatorTok{+}\StringTok{ }\NormalTok{prbconv }\OperatorTok{+}\StringTok{ }\NormalTok{avgsen }\OperatorTok{+}\StringTok{ }\NormalTok{prbpris, }\DataTypeTok{data=}\NormalTok{data_clean)}
+\NormalTok{model1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = crmrte_log ~ prbarr + prbconv + avgsen + prbpris, 
+##     data = data_clean)
+## 
+## Coefficients:
+## (Intercept)       prbarr      prbconv       avgsen      prbpris  
+##   -2.384761    -2.626160    -0.961712     0.009033     0.100288
+\end{verbatim}
+
+
+\end{document}

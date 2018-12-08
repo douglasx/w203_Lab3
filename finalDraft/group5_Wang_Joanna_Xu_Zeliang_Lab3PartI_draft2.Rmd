@@ -5,7 +5,7 @@ output:
   pdf_document: default
 ---
 ### Introduction
-In this report, we will analyze the crime statistics for a selection of counties in North Carolina and purpose to find out some main factors of crime rate. We will then purpose several policies that can potentially based on our research findings.
+In this report, we will analyze the crime statistics for a selection of counties in North Carolina and purpose to find out some main factors of crime rate. After the initial analysis on the data, we will purpose our research question.We will then provide several policies or suggestions based on our research findings. 
 
 ### Part1: Looking at the data
 
@@ -416,6 +416,16 @@ $\gamma_1$ should be negative, and $\beta_2$ should be negative so OMVB=\beta_2\
 
 ### Suggested Statistical Test:
 1. Heavier penalties and arrest rate for minor crimes: the analysis suggest that less severe crimes consist of the most crimes commited, and the arrest rate is low for this type of crime. One good test in this regard is to lift the penalties and arrest rate for minor crimes for about 2 weeks, and see if the overall crime rate over those two weeks go down.
+
+### Final conclusion:
+Based on our models, we think that to reduce crime rate in general, there are severl approaches:
+1. Increase the probability of arrest on non face to face crime. In order to achieve that, we need to furthur categorize non face to face crime and come up with strategies that can deal with each caregory. 
+
+2. Install more surveillance cameras. This will help to increase the proability of arrest for face to face crime. It will make it easier for the policy to identify the suspects. 
+
+3. If the above suggested statistical test has a positive result, we might need to consider increase penalties for minor crimes. 
+
+4. Collect more data on the omitted variables. We need further investigation after collecting information on the omitted variables. The models we have in this report both have their biases, so with more information, we can refine our models thus uncover the key to reduce crime rate. 
 
 
 
