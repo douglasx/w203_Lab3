@@ -95,7 +95,7 @@ corrplot(cor(data_clean[,sapply(data_clean,is.numeric)]),is.corr=T, method = "ci
 ```
 
 ### Research Question
-After the initial data cleaning and data analysis, we have defined our research question to be: how to reduce crime rate within North Carolina, and especially what are the most effective measures in reducing crime rate that might have been neglected before.
+After the initial data cleaning and data analysis, we have defined our research question to be: how to reduce crime rate within North Carolina, and especially what are the most effective measures in reducing crime rate.
 
 The question is asked to help the political campaign to propose effective strategies to reduce crime rate, especially in the area that might have been neglected before. From the simple correlation plot, we found that variable $mix$ has strong positive correlation with $prbarr$. It can make sense because face-to-face crimes are more severe and usually have more police concentration and resources that lead to higher probability of arrest. However, it might not be very easy for non face-to-face crime, which is still the majority of crimes that happened, but actually seem to have pretty low arrest rate. This conclusion can be obtained by the fact that crime rate ($crmrte$) is negatively correlated with probability of arrest($prbarr$) while percentage of face-to-face crime ($mix$) is positively correlated with probability of arrest ($prbarr$). Therefore, how to increase $prbarr$ for non face-to-face crime is really the strategy we need to focus our energy on.
 
@@ -204,6 +204,12 @@ plot(model1,which = 3)
 plot(model1,which =2)
 ```
 
+```{r}
+plot(model1,which = 5)
+```
+
+The above plot shows that even though there are some points that have high leverage, but since it stays within the 0.5 Cook's distance, there is nothing that we need to worry about.
+
 Next, we are doing a t-test for the coefficients to see whether they have statistical significance
 
 ```{r}
@@ -293,23 +299,14 @@ crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen 
 
 ```{r }
 model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + mix_log + taxpc_log + pctymle_log + polpcMult, data=data_clean)
-#model2 <- lm(crmrte_log ~ prbarr + prbconv + avgsen + prbpris + mix + taxpc + pctymle + polpcMult, data=data_clean)
 
 model2
 ```
 Based on the model, we notice that nonFtf has a siginificant positive effect on crmrte_log. That means the higher the non face to face offense ratio, the higher the crmrte_log. This might be interprated as, non face to face offense tends to be more violent and dangerous than face to face offend, thus get reported more. Taxpc has almost none effect on crmrte. Urban has a relativly siginificant.
 
 We will look again at the residuals and standard errors of the new model, and how is the model fitting satisfy the CLM assumptions.
-1. linear population model:<br>
-\tab we have not defined the error term, therefore we don't have to talk about the linear population model yet.
 
-2. Random sampling:<br>
-\tab we do not know how the data is collected. But based on the source of the data, the probability of arrest, conviction and sentence should be random-sampled since they all come from credible sources that only collect data from actual events Therefore, we should be confident enough to say that the datset have randome sampling.
-
-3. No perfect collinearity<br>
-\tab We are relying on R to alert us when this happens
-
-4. Zero-condition mean <br>
+1. Zero-condition mean <br>
 \tab Based on the chart below, it definitely improves compared to model1, but still deviates from zero-condition mean. <br>
 \tab Similarly, We believe it can be caused by both the face that:
 \tab a. there are omitted variables 
@@ -318,7 +315,7 @@ We will look again at the residuals and standard errors of the new model, and ho
 plot(model2,which = 1)
 ```
 
-5. Homoskedasticity <br>
+2. Homoskedasticity <br>
 \tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
 
 ```{r}
@@ -326,12 +323,18 @@ plot(model2,which = 3)
 
 ```
 
-6. Normality of Errors <br>
+3. Normality of Errors <br>
 \tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
 
 ```{r}
 plot(model2,which =2)
 ```
+
+```{r}
+plot(model2,which =5)
+```
+
+There is one point that is extremely close to the Cook's distance, but still within. We do not have to worry about that point with high leverage.
 
 Next, we are doing a t-test for the coefficients to see whether they have statistical significance
 
@@ -339,32 +342,71 @@ Next, we are doing a t-test for the coefficients to see whether they have statis
 coeftest(model2,vcov=vcovHC)
 ```
 
-Now we want to test whether the two explanatory variables that are not statistically significant are jointly significant, we build a model1.1 with just $prbarr$ and $prbconv$
+__Summary for model 2__ <br>
+1. $Prbarr$ remains to be statistically significant, but $prbconv$ has a lot of standard error introduced by adding more variables in, meaning that $prbconv$ is not the parameter to add in for a robust predictino model.
+2. The addition of the other variables helped us in making the model more accurate. The adjusted r square is higher meaning that the new variables added to the model accuracy and the impact is more than by chance.
 ```{r}
-model1.1 <- lm(crmrte_log ~ prbarr + prbconv, data=data_clean)
-```
-To test whether the difference in fit is significant, we use the wald test, which generalizes the usual F-test of overall significance, but allows for a heteroskedasticity-robust covariance matrix
-```{r}
-waldtest(model1, model1.1, vcov = vcovHC)
+paste("adjusted R square for model1 is:",summary(model1)$adj.r.squared,"; ", "adjusted R square for model2 is:",summary(model2)$adj.r.squared)
 ```
 
-The above results suggest that the variable $avgsen$ and $prbpris$ are not even jointly significant.
+3. We want to test whether $mix_log$, $taxpc_log$, $pctymle_log$ and $polpcMult$ are jointly significant, meaning that whether their coefficients are all zero.
+```{r}
+linearHypothesis(model2, c("mix_log = 0", "taxpc_log = 0", "pctymle_log = 0", "polpcMult = 0"), vcov = vcovHC)
+```
 
-
-__Summary for model 1__ <br>
-1. There are strong evidence that omitted variables exist for model1, and it leading to biases.
-2. We need to use robust standard errors
-3. Only $prbarr$ and $prbconv$ are statistically significant
-4. $avgsen$ and $prbpris$ are not even jointly significant, therefore, we might need to consider removing those two variabls in our model
+The output above tell us that the the 4 variables are jointly significant. There is a probability that there is multicollinearity among those four variables and which explains why none of them is individually significant.
 
 
 ### Fitting model 3
 Bringing in other covariates that we do not believe to be too relavent:
 
 ```{r}
-model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris_sq+avgsen+polpcMult+density+taxpc+west+central+urban+pctmin80+wcon+wtuc+wtrd+wfir+wser+wmfg+wfed+wsta+wloc+nonFtf+pctymle, data=data_clean)
+model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris+avgsen+polpcMult+density+taxpc_log+west+central+urban+pctmin80+wcon+wtuc+wtrd+wfir+wser+wmfg+wfed+wsta+wloc+mix_log+pctymle_log, data=data_clean)
+#model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris+avgsen+polpcMult+density+taxpc+west+central+urban+pctmin80+mix_log+pctymle, data=data_clean)
 model3
 ```
+
+Next, we are interested in knowing how is model3 fitting into the CLM assumptions:<br>
+4. Zero-condition mean <br>
+\tab Based on the chart below, it definitely improves compared to model1, but still deviates from zero-condition mean. <br>
+\tab Similarly, We believe it can be caused by both the face that:
+\tab a. there are omitted variables 
+\tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
+```{r}
+plot(model3,which = 1)
+```
+
+5. Homoskedasticity <br>
+\tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
+
+```{r}
+plot(model3,which = 3)
+
+```
+
+6. Normality of Errors <br>
+\tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
+
+```{r}
+plot(model3,which =2)
+```
+
+```{r}
+plot(model3,which =5)
+```
+
+the above plot shows that we don't have to worry about the points with high leverage.
+
+Next we want to check whether all variables related to wage are jointly significant. We built another model with all other variables that are not wage related, and want to use the wald test to check for statistical significance.
+```{r}
+model4 <- lm(crmrte_log ~ prbarr+prbconv+prbpris+avgsen+polpcMult+density+taxpc_log+west+central+urban+pctmin80+mix_log+pctymle_log, data=data_clean)
+waldtest(model3, model4, vcov = vcovHC)
+
+```
+
+the above result tells us that those variables are jointly significant, and there is probability a great amount of multicollinearity that caused most of them to be none-statistically-significant. Also, wage factor and economics are widely studied factors related to crime, which is out of the scope of our research question. We just want to make sure that omitting wage factors does not introduce significant amount of biase.
+
+Next we want to use Stargzer to directly compare the 4 models that we builts:
 ---
 output: pdf_document
 ---
@@ -377,9 +419,15 @@ library(stargazer)
 Here is the latex table in a PDF document:
 
 ```{r mylatextable, results = "asis"}
-stargazer(model1,model2,model3, type = 'text')
+stargazer(model1,model2,model3,model4, type = 'text', omit.stat = "f",star.cutoffs = c(0.05, 0.01, 0.001))
 
 ```
+### What does the above table tell us:
+1. model3 really help us to identify the most cost-effective measures that we should suggest in the policy to reduce crime rate. In the above table comparison, it is easy to see that the wage related variables that we intend to drop off from the analysis due to our research question, do have strong statistical significance yet the coefficients are small enough that we would not consider them to be the most important factors in our analysis. The addition of those variables does increase the adjusted R squre and the residuals plot shows more consistency with the CLM assumptions. However, the strong statistical significance + small coefficients serve as confirmation that those variables have small (close to zero) impact on the crime rate, which is not what we are trying to find in this research.
+
+2. $prbarr$ is one of the most relevant factor in reducing crime rate. This is re-affirmed by comparing between different models. It is highly significant and the coefficient is high enough for us to consider it as an cost-effective measures to suggest policies for reducing crime rate
+
+3. $polpcMult$ police per capita has high statistical significance, but we believe it does not show causality, or at least it does not have practical significance for us to suggest policies. With the background knowledge, we know that the police density will increase due to the high crime rate in a certain area, instead of the other way around. 
 
 
 ### Omitted Variable
@@ -413,19 +461,21 @@ $crmrte_log = \beta_0 + \beta_1 * pctymle + \beta_2 * avgAge + u $
 $avgAge = \gamma_0 + \gamma_1 * pctymle + v $
 $\gamma_1$ should be negative, and $\beta_2$ should be negative so OMVB=\beta_2\gamma_1>0, and $\beta_1$ is positive Therefore, the OLS coefficient of $pctymle$ will be scaled away to be more positive, gaining statistical significance.
 
+6. __income inequality__: income alone is usually not enough to tell how it can be related to crime rate, we always need extra information like income growth and income inequality to analyze the social stability of the society. It is hard to say exactly what coefficients income inequality is going to affect, but it should be related to tax income, population density, what type of crime that happens, etc.
+
 
 ### Suggested Statistical Test:
 1. Heavier penalties and arrest rate for minor crimes: the analysis suggest that less severe crimes consist of the most crimes commited, and the arrest rate is low for this type of crime. One good test in this regard is to lift the penalties and arrest rate for minor crimes for about 2 weeks, and see if the overall crime rate over those two weeks go down.
 
 ### Final conclusion:
-Based on our models, we think that to reduce crime rate in general, there are severl approaches:
-1. Increase the probability of arrest on non face to face crime. In order to achieve that, we need to furthur categorize non face to face crime and come up with strategies that can deal with each caregory. 
+Based on our models, we think that to reduce crime rate in general, there are severl approaches and can eventaully evolve into policies:
 
-2. Install more surveillance cameras. This will help to increase the proability of arrest for face to face crime. It will make it easier for the policy to identify the suspects. 
+1. Increase the probability of arrest on non face to face crime. In order to achieve that, we need to furthur categorize non face to face crime and come up with strategies that can deal with each caregory. For example, most non face-to-face crimes are hard to identify and there are fewer evidences left. In order to catch more of those crimes in actions and with evidences, one policy that we will suggest is to install more surveillance cameras, especially in the areas where non face-to-faces crimes are most reported (downtowns, subways, malls, etc.)
 
-3. If the above suggested statistical test has a positive result, we might need to consider increase penalties for minor crimes. 
+2. If the above suggested statistical test has a positive result, we might need to consider increase penalties for minor crimes. Penalties for minor crime do not necessarily mean longer prison time. It could be in other forms like social services. 
 
-4. Collect more data on the omitted variables. We need further investigation after collecting information on the omitted variables. The models we have in this report both have their biases, so with more information, we can refine our models thus uncover the key to reduce crime rate. 
+3. Above are two policies on the measures we can take directly related to crime and arrest. However, in most of our omitted variables, if we have enough information about those variabels, there is a possiblity that we can draw conclusion from other aspects, for example, economically how to reduce income inequality. Collect more data on the omitted variables. We need further investigation after collecting information on the omitted variables. The models we have in this report all have their biases, so with more information, we can refine our models thus uncover the other key measures to reduce crime rate. 
+
 
 
 
