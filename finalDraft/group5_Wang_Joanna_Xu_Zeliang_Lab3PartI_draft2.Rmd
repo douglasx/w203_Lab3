@@ -1,8 +1,9 @@
 ---
-title: "w203_Lab3_group5_draft1: Joanna wang, Douglas(Zeliang) Xu"
+title: 'w203_Lab3_group5_draft1: Joanna wang, Douglas(Zeliang) Xu'
 output:
   html_document: default
   pdf_document: default
+  word_document: default
 ---
 ### Introduction
 In this report, we will analyze the crime statistics for a selection of counties in North Carolina and purpose to find out some main factors of crime rate. After the initial analysis on the data, we will purpose our research question.We will then provide several policies or suggestions based on our research findings. 
@@ -18,6 +19,7 @@ library(lmtest)
 data <- read.csv(file="crime_v2.csv", header=TRUE, sep=",",na.strings=c("`","","NA"))
 objects(data)
 ```
+
 Here we have the summary of all the veriables in the data set, to spot any anormaly. 
 ```{r}
 summary(data)
@@ -25,7 +27,7 @@ summary(data)
 
 We noticed that there are 6 NAs in all the variables. To took a closer look at the last few rows of the date set to verify the NA entires.  
 ```{r}
-tail(data,11)
+tail(data,7)
 ```
 Some of the things we see in the dataset and have lead us to some decisions: 
 1. 6 NAs for all columns. We will remove those entries. 
@@ -44,13 +46,14 @@ With the import method modified, we are able to address the missing values and t
 1. remove NA
 ```{r }
 data <- na.omit(data)
-summary(data)
 ```
+
 2. take out year column as it does not mean anything in our analysis
 ```{r }
 data_clean <- subset(data,select=-c(year))
 objects(data_clean)
 ```
+
 3. "prbarr" max > 1. Becuase this variable is supposed to represent the probability of arrest, the max should never exceed 1. 
 ```{r }
 data_clean <- subset(data_clean,data_clean$prbarr <1)
@@ -83,8 +86,10 @@ summary(data_clean$wser)
 hist(data_clean$crmrte,breaks=50, main="crmrte", xlab="crmrte")
 ```
 
+
 ```{r }
 hist(log(data_clean$crmrte),breaks=50, main="Log transform of crmrte", xlab="Log of crmrte")
+
 ```
 
 2. As the second part of the EDA, we take an initial look at the simple correlation between each variable inside the dataframe to help us understand the general correlations betwen each varible and the dependent variable to help identify the explanatory variables of interest
@@ -124,11 +129,13 @@ With the above being proposed, we decided to take a look at the distribution of 
 ```{r }
 # prbarr
 hist(data_clean$prbarr,breaks=50,main="prbarr", xlab="prbarr")
+
 ```
 
 ```{r }
 #prbconv
 hist(data_clean$prbconv,breaks=50,main="prbconv", xlab="prbconv")
+
 ```
 
 ```{r }
@@ -140,6 +147,7 @@ hist(data_clean$prbpris,breaks=50,main="prbpris", xlab="prbpris")
 #avgsen
 hist(data_clean$avgsen,breaks=50,main="avgsen", xlab="avgsen")
 
+
 ```
 
 The above histograms of each explanatory variable all seem rather normally distributed, with some anomalies implied in $prbarr$ and $avgsen$. However, we don't think there is enough evidence to make a decision on whether the data is anomaly or not, and we will use the data for model building.
@@ -150,12 +158,15 @@ Next, we want to look at the scatterplot between each key explanatory variable a
 ```{r }
 scatterplot(data_clean$prbarr,data_clean$crmrte_log, main="prbarr vs. crmrte_log", xlab="prbarr", ylab="crmrte_log")
 ```
+
 ```{r }
 scatterplot(data_clean$prbconv,data_clean$crmrte_log, main="prbconv vs. crmrte_log", xlab="prbconv", ylab="crmrte_log")
 ```
+
 ```{r }
 scatterplot(data_clean$prbpris,data_clean$crmrte_log, main="prbpris vs. crmrte_log", xlab="prbpris", ylab="crmrte_log")
 ```
+
 ```{r }
 scatterplot(data_clean$avgsen,data_clean$crmrte_log, main="avgsen vs. crmrte_log", xlab="avgsen", ylab="crmrte_log")
 ```
@@ -185,6 +196,7 @@ Now let's look at whether the model coefficients satisfy the 6 CLM assumptions:
 \tab We believe it can be caused by both the face that:
 \tab a. there are omitted variables 
 \tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
+
 ```{r}
 plot(model1,which = 1)
 ```
@@ -225,25 +237,18 @@ To test whether the difference in fit is significant, we use the wald test, whic
 waldtest(model1, model1.1, vcov = vcovHC)
 ```
 
-The above results suggest that the variable $avgsen$ and $prbpris$ are not even jointly significant.
-
-
 __Summary for model 1__ <br>
-1. There are strong evidence that omitted variables exist for model1, and it leading to biases.
-2. We need to use robust standard errors
+1. There are strong evidence that omitted variables exist for model1, and it leading to biases.Therefore, in the second model, we will add more covariates that we believe to be relevant and can help us reduce the omitted variable biases.
+2. We need to use robust standard errors when looking at the model standard errors.
 3. Only $prbarr$ and $prbconv$ are statistically significant
-4. $avgsen$ and $prbpris$ are not even jointly significant, therefore, we might need to consider removing those two variabls in our model
+4. The above results suggest that the variable $avgsen$ and $prbpris$ are not jointly significant.Therefore, we have decided to remove the two variables from our model specification, and thus we are not going to use them for policy suggestions.
 
 
 ### Fitting model 2
 Based on the analysis from research question section, we do believe that the variable $mix$ has certain influence on crime rate, especially in $prbarr$. The fact that $prbarr$ has strong correlation with $mix$ lead us to think that we should really be focusing on the portion of crime that is non face-to-face, which has relatively low $prbarr$. Therefore, we are adding an extra column that reflects percentage of non face-to-face crime: <br>
 
-```{r}
-hist(data_clean$mix,breaks=50,main="mix", xlab="mix")
-
-```
-
-The above histogram does not seem very normally distributed. Since it is left skewed, we believe that log transformation is helpful:
+Below are the explanation of what and why we want to introduce those covariates into model2, and what transformation we are applying to them <br>
+The original histogram of $mix$ does not seem very normally distributed. Since it is left skewed, we believe that log transformation is helpful:
 ```{r}
 hist(log(data_clean$mix),breaks=50,main="log transformed mix", xlab="log transformed mix")
 ```
@@ -257,16 +262,13 @@ scatterplot(data_clean$mix_log,data_clean$crmrte_log, main="mix_log vs. crmrte_l
 
 1. mix: The above two scatterplots show enough evidence that variable $nonFtF$ is an important covariate. Logically, we believe that $nonFtF$ should directly impact $prbarr$ since the non face-to-face crime tend to be less severe, and there are not as much evidence that can lead to arrest. With the probability of arrest being low for this kind of crime, people are willing to take the risk to commit those crimes. Reducing the non face-to-face crime is very important in reducing the ocerall $crmrte$. Therefore, we believe that $nonFtF$ is crucial in model building and it will help make our model more accurate and less biased.
 
-2. polpc: the magnitude of the $polpc$ is at least 100 times smaller than the other probability variables, and we believe that it might add some imbalance in our model building process, therefore we decided to create another variable that is 100 times of polpc:
+2. polpc: we believe that the police per capita is going to help with our model accuracy. The density or distribution of police forces is very likely to affect the effectiveness of the arrest when crime happens. The magnitude of the $polpc$ is at least 100 times smaller than the other probability variables, and we believe that it might add some imbalance in our model building process, therefore we decided to create another variable that is 100 times of polpc:
 ```{r }
 data_clean$polpcMult <- data_clean$polpc*100
 hist(data_clean$polpcMult,breaks=50,main="polpcMult", xlab="polpcMult")
 ```
 
-3. taxpc: 
-```{r }
-hist(data_clean$taxpc,breaks=50,main="taxpc", xlab="taxpc")
-```
+3. taxpc: Related to police density and effectiveness of arrest, we believe that the tax income of the local government will affect how much resources they have to implement systematic measures to reduce crime rate. Therefore, we consider $taxpc$ as an important covariate in model2
 
 ```{r }
 hist(log(data_clean$taxpc),breaks=50,main="log transformed taxpc", xlab="log transformed taxpc")
@@ -279,21 +281,19 @@ data_clean$taxpc_log <- log(data_clean$taxpc)
 
 4. urban: we will use $urban$ as indicator variable to see how we compare the data between areas outside the city and within the city
 
-5. pctymle: According to the distribution below, there seems to be one point that has much higher percentage of young males. However, we don't have enough evidence to see whether it is an error in the data or an outlier.
+5. pctymle: The percentage of young male seems to have rather big correlations with crime rate. Therefore, we will add this covariate into model2. We want to see whether we can draw some conclusions on young males, maybe increasing education opportunities for young males so that they acquire more skills and knowledge to find a job. <br>According to the distribution below, there seems to be one point that has much higher percentage of young males. However, we don't have enough evidence to see whether it is an error in the data or an outlier.
+
 ```{r}
-hist(data_clean$pctymle, breaks=50, main="pctymle", xlab="pctymle")
-```
-```{r}
-hist(log(data_clean$pctymle), breaks=50, main="pctymle", xlab="pctymle")
+hist(log(data_clean$pctymle), breaks=50, main="log transformed pctymle", xlab="log transformed pctymle")
 ```
 
-With the above comparison, we will use the log transformed version of the data, and create a new variable $pctymle_log$
+we will use the log transformed version of the data, and create a new variable $pctymle_log$
 ```{r}
 data_clean$pctymle_log <- log(data_clean$pctymle)
 ```
 
 
-_Fitting model 2__:<br>
+__Fitting model 2__:<br>
 With the second model, we are building it on top of model 1 but adding more variables that can have influence on the dependent variable crmte. After the data transformation, the model is as below: <br>
 crmrte_log = $\beta_0 + \beta_1 * prbarr + \beta_2 * prbconv + \beta_3 * avgsen + \beta_4 * prbpris + \beta_5 * mix_log + \beta_6 * taxpc_log + \beta_7 * urban + \beta_8 * pctymle_log + \beta_9 * polpcMult + u $ 
 
@@ -306,35 +306,10 @@ Based on the model, we notice that nonFtf has a siginificant positive effect on 
 
 We will look again at the residuals and standard errors of the new model, and how is the model fitting satisfy the CLM assumptions.
 
-1. Zero-condition mean <br>
-\tab Based on the chart below, it definitely improves compared to model1, but still deviates from zero-condition mean. <br>
-\tab Similarly, We believe it can be caused by both the face that:
-\tab a. there are omitted variables 
-\tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
-```{r}
-plot(model2,which = 1)
-```
+Next, we are interested in knowing how is model2 fitting into the classical linear model assumptions:<br>
+1. model2 has a slightly better residual vs. fitted value plot at the red curve is closer to 0 and also more straight. It indicates that we have smaller biases by introducing more variables into the specification <br>
+2. There is one point in the leverage plot which is almost on the Crook's line, but it is still within the acceptable range, and we will leave the point in our analysis. Otherwise there are no other warning signs that we see for model2.
 
-2. Homoskedasticity <br>
-\tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
-
-```{r}
-plot(model2,which = 3)
-
-```
-
-3. Normality of Errors <br>
-\tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
-
-```{r}
-plot(model2,which =2)
-```
-
-```{r}
-plot(model2,which =5)
-```
-
-There is one point that is extremely close to the Cook's distance, but still within. We do not have to worry about that point with high leverage.
 
 Next, we are doing a t-test for the coefficients to see whether they have statistical significance
 
@@ -344,6 +319,7 @@ coeftest(model2,vcov=vcovHC)
 
 __Summary for model 2__ <br>
 1. $Prbarr$ remains to be statistically significant, but $prbconv$ has a lot of standard error introduced by adding more variables in, meaning that $prbconv$ is not the parameter to add in for a robust predictino model.
+
 2. The addition of the other variables helped us in making the model more accurate. The adjusted r square is higher meaning that the new variables added to the model accuracy and the impact is more than by chance.
 ```{r}
 paste("adjusted R square for model1 is:",summary(model1)$adj.r.squared,"; ", "adjusted R square for model2 is:",summary(model2)$adj.r.squared)
@@ -362,40 +338,13 @@ Bringing in other covariates that we do not believe to be too relavent:
 
 ```{r}
 model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris+avgsen+polpcMult+density+taxpc_log+west+central+urban+pctmin80+wcon+wtuc+wtrd+wfir+wser+wmfg+wfed+wsta+wloc+mix_log+pctymle_log, data=data_clean)
-#model3 <- lm(crmrte_log ~ prbarr+prbconv+prbpris+avgsen+polpcMult+density+taxpc+west+central+urban+pctmin80+mix_log+pctymle, data=data_clean)
 model3
 ```
 
-Next, we are interested in knowing how is model3 fitting into the CLM assumptions:<br>
-4. Zero-condition mean <br>
-\tab Based on the chart below, it definitely improves compared to model1, but still deviates from zero-condition mean. <br>
-\tab Similarly, We believe it can be caused by both the face that:
-\tab a. there are omitted variables 
-\tab b. some parameters might have been misspecified. However, from the scatterplot, we cannot seem to fine strong evidence that the model is misspecified, therefore we are leaning towards the fact that there are other important variables that are omitted from the model
-```{r}
-plot(model3,which = 1)
-```
+Next, we are interested in knowing how is model3 fitting into the classical linear model assumptions:<br>
+1. model3 has a better residual vs. fitted value plot at the red curve is closer to 0 and also more straight. It indicates that we have smaller biases by introducing more variables into the specification <br>
+2. There are no other warning signs that we see for model3, except that the introduction of other varialbes have impacted the normality. However, we believe that 81 sample size should be enough of a sample size to not have normality affect our analysis.
 
-5. Homoskedasticity <br>
-\tab The below plot is not anywhere close to being flat. It suggests that there are heteroskedasticity in our model, therefore, to look at the errors for the model, we need to rely on the robust standard errors
-
-```{r}
-plot(model3,which = 3)
-
-```
-
-6. Normality of Errors <br>
-\tab The Q-Q plot below suggests that most of the data points follow normal distribution relatively well, with some divergence towards the two ends. Since the two ends have fewer data points and we have close to 100 data points, we can take advantage of central limit theorem.
-
-```{r}
-plot(model3,which =2)
-```
-
-```{r}
-plot(model3,which =5)
-```
-
-the above plot shows that we don't have to worry about the points with high leverage.
 
 Next we want to check whether all variables related to wage are jointly significant. We built another model with all other variables that are not wage related, and want to use the wald test to check for statistical significance.
 ```{r}
@@ -416,12 +365,11 @@ knitr::opts_chunk$set(echo = FALSE)
 library(stargazer)
 ```
 
-Here is the latex table in a PDF document:
-
 ```{r mylatextable, results = "asis"}
 stargazer(model1,model2,model3,model4, type = 'text', omit.stat = "f",star.cutoffs = c(0.05, 0.01, 0.001))
-
 ```
+
+
 ### What does the above table tell us:
 1. model3 really help us to identify the most cost-effective measures that we should suggest in the policy to reduce crime rate. In the above table comparison, it is easy to see that the wage related variables that we intend to drop off from the analysis due to our research question, do have strong statistical significance yet the coefficients are small enough that we would not consider them to be the most important factors in our analysis. The addition of those variables does increase the adjusted R squre and the residuals plot shows more consistency with the CLM assumptions. However, the strong statistical significance + small coefficients serve as confirmation that those variables have small (close to zero) impact on the crime rate, which is not what we are trying to find in this research.
 
@@ -429,6 +377,14 @@ stargazer(model1,model2,model3,model4, type = 'text', omit.stat = "f",star.cutof
 
 3. $polpcMult$ police per capita has high statistical significance, but we believe it does not show causality, or at least it does not have practical significance for us to suggest policies. With the background knowledge, we know that the police density will increase due to the high crime rate in a certain area, instead of the other way around. 
 
+
+Based on the comparison above, we want to see if we can have another model with the variables that showed statistical significance and at the same time are relevant to our research question. We are focusing on the measures that are most cost-effective, and therefore, we want to find those explanatory variables that have statistical significance while have larger slopes.
+```{r}
+model5 <- lm(crmrte_log ~ prbarr+density+polpcMult+pctmin80, data=data_clean)
+summary(model5)
+```
+
+Based on the above analysis, we are achieving relatively high adjusted R-squared value with 4 key variables, which all have statistical significance. Based on the analysis of 6 classical linear model assumptions, we definitely see improvement in terms of zero-condition mean and normality. However, we believe that there should still be omitted variable biases due to some other key aspects missing from the dataset:
 
 ### Omitted Variable
 
@@ -475,12 +431,3 @@ Based on our models, we think that to reduce crime rate in general, there are se
 2. If the above suggested statistical test has a positive result, we might need to consider increase penalties for minor crimes. Penalties for minor crime do not necessarily mean longer prison time. It could be in other forms like social services. 
 
 3. Above are two policies on the measures we can take directly related to crime and arrest. However, in most of our omitted variables, if we have enough information about those variabels, there is a possiblity that we can draw conclusion from other aspects, for example, economically how to reduce income inequality. Collect more data on the omitted variables. We need further investigation after collecting information on the omitted variables. The models we have in this report all have their biases, so with more information, we can refine our models thus uncover the other key measures to reduce crime rate. 
-
-
-
-
-
-
-
-
-
